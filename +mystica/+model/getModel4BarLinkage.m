@@ -22,7 +22,7 @@ function model = getModel4BarLinkage()
     cellModel.assignLinkProperty('name','baseLink' ,'value',0)
     cellModel.assignLinkProperty('name','fixed'    ,'value',0)
     % Visual
-    cellModel.assignLinkProperty('name','stlName'     ,'value',fullfile('+mystica','+viz','meshes','cube.stl'))
+    cellModel.assignLinkProperty('name','stlName'     ,'value',fullfile(fileparts(mfilename('fullpath')),'..','+viz','meshes','cube.stl'))
     cellModel.assignLinkProperty('name','stlEdgeColor','value','none')
 
     %-------------------------------------------------------------------------%

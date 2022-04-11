@@ -1,4 +1,4 @@
-function visualizeKinRel(input)
+function visual = visualizeKinRel(input)
     arguments
         input.model
         input.data

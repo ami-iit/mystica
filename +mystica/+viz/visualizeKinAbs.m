@@ -1,4 +1,4 @@
-function visualizeKinAbs(input)
+function visual = visualizeKinAbs(input)
     arguments
         input.model
         input.data

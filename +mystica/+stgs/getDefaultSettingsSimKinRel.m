@@ -96,7 +96,6 @@ function stgs = getDefaultSettingsSimKinRel(model,input)
     stgs.visualizer.mBody.jointCSYS.dim       = model.linksAttributes{1}.linkDimension/10;
 
     stgs.visualizer.joint.cone.show      = 0;
-    stgs.visualizer.joint.cone.stlName   = fullfile('+mystica','+viz','meshes','cone45.stl');
     stgs.visualizer.joint.cone.angleIn   = 50*pi/180;
     stgs.visualizer.joint.cone.angleDe   = 10*pi/180;
     stgs.visualizer.joint.cone.color     = 'g';
@@ -104,7 +103,6 @@ function stgs = getDefaultSettingsSimKinRel(model,input)
     stgs.visualizer.joint.cone.dim       = model.linksAttributes{1}.linkDimension/6;
 
     stgs.visualizer.joint.sphere.show           = 0;
-    stgs.visualizer.joint.sphere.stlName        = fullfile('+mystica','+viz','meshes','sphere.stl');
     stgs.visualizer.joint.sphere.colorBodyFrame = 0;
     stgs.visualizer.joint.sphere.showNAct       = 0;
     stgs.visualizer.joint.sphere.colorNAct      = [1 1 1];
