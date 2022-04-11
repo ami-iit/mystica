@@ -10,7 +10,6 @@ function model = getModelCoverSquareLinks(input)
     [umc,meshDesign.unitMeas]=mystica.model.setUM('length','m','mass','kg');
 
     meshDesign.shape = 'square';
-    input.restConfiguration = 'flat';
     meshDesign.baseIndex = 1;
     meshDesign.fixedLinksIndexes = [meshDesign.baseIndex];
     meshDesign.tform_0_bBase = mystica.rbm.getTformGivenPosRotm(zeros(3,1)*(umc.length),mystica.rbm.getRotmGivenEul('rz',0)); %[m]*(umc.length)
