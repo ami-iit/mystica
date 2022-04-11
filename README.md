@@ -15,9 +15,8 @@
 
 ---
 
-## Table of content
+### Table of content
 
-- [Table of content](#table-of-content)
 - [:hammer: Dependencies](#hammer-dependencies)
 - [:floppy_disk: Installation](#floppy_disk-installation)
 - [:rocket: Usage](#rocket-usage)
@@ -33,7 +32,7 @@ Other requisites are:
 - [`casadi`](https://web.casadi.org/)
 - [`yamlmatlab`](https://github.com/ewiger/yamlmatlab)
 
-Both [`casadi`](https://web.casadi.org/) and [`yamlmatlab`](https://github.com/ewiger/yamlmatlab) will be downloaded and configured in section [Installation](#floppy_disk-installation)
+Both [`casadi`](https://web.casadi.org/) and [`yamlmatlab`](https://github.com/ewiger/yamlmatlab) are downloaded and configured in section [Installation](#floppy_disk-installation).
 
 ## :floppy_disk: Installation
 
@@ -41,14 +40,14 @@ Both [`casadi`](https://web.casadi.org/) and [`yamlmatlab`](https://github.com/e
 
 ``` cmd
 git clone https://github.com/ami-iit/mystica.git
-cd('mystica')
+cd mystica
 ```
 
 2. Run the matlab function [`install()`](install.m).
 ``` matlab
 install()
 ```
-The function [`install()`](install.m) downloads [`mambaforge`](https://github.com/conda-forge/miniforge#mambaforge). [`mambaforge`](https://github.com/conda-forge/miniforge#mambaforge) is a package manager that will download and configure our dependencies in conda enviroment called `mystica`.\
+The function [`install()`](install.m) downloads [`mambaforge`](https://github.com/conda-forge/miniforge#mambaforge). [`mambaforge`](https://github.com/conda-forge/miniforge#mambaforge) is a package manager that downloads and configures our dependencies in conda enviroment called `mystica`.\
 If you already have [`mambaforge`](https://github.com/conda-forge/miniforge#mambaforge) configured, you can call [`install()`](install.m) function defining `mambaforge_prefix` value:
 
 ``` matlab
@@ -64,8 +63,6 @@ Alternatively, you can launch matlab from terminal after having activated the co
 mamba activate mystica
 matlab
 ```
-
-
 
 ## :gear: Contributing
 
