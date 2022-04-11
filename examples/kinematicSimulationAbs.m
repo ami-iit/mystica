@@ -25,6 +25,7 @@ stgs  = mystica.stgs.getDefaultSettingsSimKinAbs(model);
 % run simulation
 
 data  = mystica.runSimKinAbs('model',model,'stgs',stgs,'mBodyPosQuat_0',model.getMBodyPosQuatRestConfiguration,'nameControllerClass','mystica.controller.ExampleKinAbs');
+% mystica.controller.ExampleKinAbs is a controller that generates random values of mBodyTwist_0
 
 % visualize data
 

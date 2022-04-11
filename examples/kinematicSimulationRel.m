@@ -29,6 +29,7 @@ stgs = mystica.stgs.getDefaultSettingsSimKinRel(model);
 % run simulation
 
 data = mystica.runSimKinRel('model',model,'stgs',stgs,'mBodyPosQuat_0',model.getMBodyPosQuatRestConfiguration,'nameControllerClass','mystica.controller.ExampleKinRel');
+% mystica.controller.ExampleKinRel is a controller that generates random values of motorsAngVel
 
 % visualize data
 
