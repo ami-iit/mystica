@@ -7,7 +7,7 @@ fclose('all');
 
 % generate Model
 
-switch 'flat_squareLinks'
+switch '4barLinkage'
     case 'flat_squareLinks'
         model = mystica.model.getModelCoverSquareLinks('n',6,'m',3,'restConfiguration','cylinder','linkDimension',0.0425);
         % assign motors location
