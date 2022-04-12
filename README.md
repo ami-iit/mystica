@@ -1,7 +1,7 @@
 <h1 align="left">mystica</h1>
 
 <p align="left">
-   <a href="https://github.com/ami-iit/mystica/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-LGPL-19c2d8.svg" alt="Size" class="center"/></a>
+   <a href="https://github.com/ami-iit/mystica/blob/master/LICENSE"><img src="https://img.shields.io/github/license/ami-iit/mystica" alt="Size" class="center"/></a>
 </p>
 
 **Multi bodY SimulaTor maxImal CoordinAtes**
