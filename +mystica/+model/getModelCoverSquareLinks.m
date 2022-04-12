@@ -40,8 +40,8 @@ function model = getModelCoverSquareLinks(input)
     % Visual
     cellModel.assignLinkProperty('name','stlScale'    ,'value',meshDesign.linkDimension*[1 1 1])
     cellModel.assignLinkProperty('name','stlName'     ,'value',fullfile(fileparts(mfilename('fullpath')),'..','+viz','meshes','nodeSquare.stl'))
-    cellModel.assignLinkProperty('name','stlFaceColor','value',[0.50,0.70,0.90],'indexes',find(mod(reshape(1:input.n*input.m,[],input.n)' - (1:input.n)',2)'==0))
-    cellModel.assignLinkProperty('name','stlFaceColor','value',[0.45,0.75,0.85],'indexes',find(mod(reshape(1:input.n*input.m,[],input.n)' - (1:input.n)',2)'==1))
+    cellModel.assignLinkProperty('name','stlFaceColor','value',[0.50,0.70,0.90],'indexes',find( getChessboardMask(input.n,input.m)))
+    cellModel.assignLinkProperty('name','stlFaceColor','value',[0.45,0.75,0.85],'indexes',find(~getChessboardMask(input.n,input.m)))
     cellModel.assignLinkProperty('name','stlFaceColor','value',[0.00,0.40,0.40],'indexes',meshDesign.fixedLinksIndexes)
     cellModel.assignLinkProperty('name','stlEdgeColor','value','none')
 
@@ -75,4 +75,12 @@ function model = getModelCoverSquareLinks(input)
 
     model = mystica.model.Model(cellModel);
 
+end
+
+function M = getChessboardMask(nRows,nColumns)
+    M = false(nRows,nColumns);
+    M(1,1:2:nColumns) = 1;
+    for i = 2 : nRows
+        M(i,~M(i-1,:))=1;
+    end
 end
