@@ -135,7 +135,7 @@ function stgs = getDefaultSettingsSimKinAbs(model,input)
     stgs.visualizer.gif.compressionRatio = 2;
 
     stgs.visualizer.video.save    = 0;
-    stgs.visualizer.video.name    = ['kinAbs_',model.name,'_',strTime,'.mp4'];
+    stgs.visualizer.video.name    = ['kinAbs_',model.name,'_',strTime,'.mp4']; % .avi or .mp4 (mp4 only windows and macos see https://it.mathworks.com/help/matlab/ref/videowriter.html#d123e1601330) 
     stgs.visualizer.video.quality = 5;
 
 end
