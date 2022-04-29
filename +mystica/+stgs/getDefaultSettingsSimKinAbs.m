@@ -8,7 +8,7 @@ function stgs = getDefaultSettingsSimKinAbs(model,input)
 
     stgs.unitMeas  = model.unitMeas;
     stgs.startFile = input.startFile;
-    
+
     %% Desired shape
 
     stgs.desiredShape.fun = @(x,y)   -1*( ((x-0.15)*2).^2+((y+0.15)*2).^2);
@@ -127,20 +127,6 @@ function stgs = getDefaultSettingsSimKinAbs(model,input)
     stgs.visualizer.cameraView.finalRotation.pause.start     = 1;
     stgs.visualizer.cameraView.finalRotation.pause.end       = 1;
     stgs.visualizer.cameraView.finalRotation.values          = [90,0];
-
-    stgs.visualizer.background{1}.stlName = '../../cad/studies/008_icub-simp-rep/leg.stl';
-    stgs.visualizer.background{1}.tform_0_originSTL = mystica.rbm.getTformGivenPosRotm(zeros(3,1),mystica.rbm.getRotmGivenEul('rx',0));
-    stgs.visualizer.background{1}.scale     = [1 1 1]/1e3;
-    stgs.visualizer.background{1}.FaceColor = [0.7 0.7 0.7];
-    stgs.visualizer.background{1}.EdgeColor = 'none';
-    stgs.visualizer.background{1}.FaceAlpha = 0.3;
-
-    stgs.visualizer.background{2}.stlName = '../../cad/studies/008_icub-simp-rep/cover.stl';
-    stgs.visualizer.background{2}.tform_0_originSTL = mystica.rbm.getTformGivenPosRotm(zeros(3,1),mystica.rbm.getRotmGivenEul('rx',0));
-    stgs.visualizer.background{2}.scale     = [1 1 1]/1e3;
-    stgs.visualizer.background{2}.FaceColor = [0.3 0.3 0];
-    stgs.visualizer.background{2}.EdgeColor = 'none';
-    stgs.visualizer.background{2}.FaceAlpha = 0.3;
 
     stgs.visualizer.background = {};
 
