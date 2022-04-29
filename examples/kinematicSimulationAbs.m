@@ -7,7 +7,7 @@ fclose('all');
 
 % generate Model
 
-switch '4barLinkage'
+switch 'cylinder_triangleLinks'
     case 'cylinder_triangleLinks'
         model = mystica.model.getModelCoverTriangleLinks('n',3,'m',5,'restConfiguration','cylinder','linkDimension',0.0425);
     case 'flat_triangleLinks'

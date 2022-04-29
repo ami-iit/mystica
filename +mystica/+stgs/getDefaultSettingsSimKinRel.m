@@ -8,7 +8,7 @@ function stgs = getDefaultSettingsSimKinRel(model,input)
 
     stgs.unitMeas  = model.unitMeas;
     stgs.startFile = input.startFile;
-    
+
     %% Desired shape
 
     stgs.desiredShape.fun = @(x,y)   0.005*(5*cos(10*x-2)+5*cos(10*x-20*y));
@@ -146,20 +146,13 @@ function stgs = getDefaultSettingsSimKinRel(model,input)
     stgs.visualizer.cameraView.finalRotation.pause.end       = 1;
     stgs.visualizer.cameraView.finalRotation.values          = [90,0];
 
-    %stgs.visualizer.background{1}.stlName = '../../cad/studies/008_icub-simp-rep/leg.stl';
-    %stgs.visualizer.background{1}.tform_0_originSTL = mystica.rbm.getTformGivenPosRotm(zeros(3,1),mystica.rbm.getRotmGivenEul('rx',0));
-    %stgs.visualizer.background{1}.scale     = [1 1 1]/1e3;
-    %stgs.visualizer.background{1}.FaceColor = [0.7 0.7 0.7];
-    %stgs.visualizer.background{1}.EdgeColor = 'none';
-    %stgs.visualizer.background{1}.FaceAlpha = 0.3;
-
     stgs.visualizer.background = {};
 
     stgs.visualizer.gif.save             = 0;
     stgs.visualizer.gif.name             = ['kinRel_',model.name,'_',strTime,'.gif'];
     stgs.visualizer.gif.compressionRatio = 2;
 
-    stgs.visualizer.video.save    = 1;
+    stgs.visualizer.video.save    = 0;
     stgs.visualizer.video.name    = ['kinRel_',model.name,'_',strTime,'.mp4'];
     stgs.visualizer.video.quality = 5;
 
