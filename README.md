@@ -8,7 +8,7 @@
 
 **mystica** is a library of classes and functions to simulate multibody systems.
 **mystica** computes the system evolution modeling the problem using a state definition that we define _maximal_.
-The _maximal_ representation consists of a set of _non-minimum_ variables $\textbf{q}$ complemented by holonomic constraint $g(\textbf{q})=0$.
+The _maximal_ representation consists of a set of _non-minimum_ variables 𝐪 complemented by holonomic constraint g(𝐪) = 0.
 
 ---
 
