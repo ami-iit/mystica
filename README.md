@@ -79,6 +79,8 @@ mystica.viz.visualizeKinRel('model',model,'data',data,'stgs',stgs)
 
 Other examples can be found in the [examples directory](examples).
 
+If you want to go deep into the code, we prepared [this document](docs/nomenclature.md) as an entry point to explain and describe our variables.
+
 ## :gear: Contributing
 
 **mystica** is an open-source project, and is thus built with your contributions. We strongly encourage you to open an issue with your feature request. Once the issue has been opened, you can also proceed with a pull-request :rocket:

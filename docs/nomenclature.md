@@ -1,6 +1,8 @@
 # Nomenclature
 ## Variables
 
+To render the following LaTeX equations, we suggest to install the chrome extension [TeX All the Things](https://chrome.google.com/webstore/detail/tex-all-the-things/cbimabofgmfdkicghcadidpemeenbffn).
+
 code Name | LaTeX | Description| Dimensions
 -- | -- | -- | --
 `pos_a_b` | $p^ {a}_ {a,b}$ | Position Vector| [3,1]
