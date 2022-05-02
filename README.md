@@ -51,12 +51,12 @@ cd mystica
 ``` matlab
 install()
 ```
-The function [`install()`](install.m) downloads [`mambaforge`](https://github.com/conda-forge/miniforge#mambaforge). [`mambaforge`](https://github.com/conda-forge/miniforge#mambaforge) is a package manager that downloads and configures our dependencies in conda enviroment called `mystica`.\
-If you already have [`mambaforge`](https://github.com/conda-forge/miniforge#mambaforge) configured, you can call [`install()`](install.m) function defining `mambaforge_prefix` value:
-
-``` matlab
-install('mambaforge_prefix',<your mambaforge path prefix>)
-```
+The function [`install()`](install.m) downloads [`mambaforge`](https://github.com/conda-forge/miniforge#mambaforge). [`mambaforge`](https://github.com/conda-forge/miniforge#mambaforge) is a package manager that downloads and configures our dependencies in conda enviroment called `mystica`.
+<details>
+    <summary>If you already have <a href="https://github.com/conda-forge/miniforge#mambaforge"><code>mambaforge</code></a></summary>
+    If you already have <a href="https://github.com/conda-forge/miniforge#mambaforge"><code>mambaforge</code></a> configured, you can call <a href="install.m"><code>install()</code></a> function defining <code>mambaforge_prefix</code> value:
+    <pre><code>install('mambaforge_prefix',&#60;your mambaforge path prefix&#62;)</code></pre>
+</details>
 
 ## :rocket: Usage
 
