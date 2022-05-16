@@ -12,11 +12,14 @@ function nameNew = createTimeTrackerFile(nameOld,baseName,actualValue,maxValue)
     end
     if maxValue == 0
         nameNew = [baseName,'_',num2str(actualValue),'.txt'];
-    else
+        fileID = fopen(nameNew,'w');
+        fclose(fileID);
+    elseif actualValue < maxValue
         nameNew = [baseName,'_',num2str(actualValue),'-',num2str(maxValue),'.txt'];
+        fileID = fopen(nameNew,'w');
+        fclose(fileID);
+    else
+        nameNew = '';
     end
-
-    fileID = fopen(nameNew,'w');
-    fclose(fileID);
 
 end
