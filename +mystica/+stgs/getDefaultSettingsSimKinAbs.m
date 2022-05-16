@@ -12,10 +12,10 @@ function stgs = getDefaultSettingsSimKinAbs(model,input)
 
     %% Desired shape
 
-    stgs.desiredShape.fun = @(x,y)   -1*( ((x-0.15)*2).^2+((y+0.15)*2).^2);
-    stgs.desiredShape.fun = @(x,y,t) stgs.desiredShape.fun(x,y);
-    stgs.desiredShape.fun = @(x,y,t) stgs.desiredShape.fun(x,y,t)-stgs.desiredShape.fun(0,0,t);
-    stgs.desiredShape.fun = @(x,y,t) stgs.desiredShape.fun(x/stgs.unitMeas.converter.length,y/stgs.unitMeas.converter.length,t)*stgs.unitMeas.converter.length;
+    stgs.desiredShape.fun = @(x,y)   -1*( ((x-0.15)*2).^2+((y+0.15)*2).^2); %[m]
+    stgs.desiredShape.fun = @(x,y,t) stgs.desiredShape.fun(x,y); %[m]
+    stgs.desiredShape.fun = @(x,y,t) stgs.desiredShape.fun(x,y,t)-stgs.desiredShape.fun(0,0,t); %[m]
+    stgs.desiredShape.fun = @(x,y,t) stgs.desiredShape.fun(x/stgs.unitMeas.converter.length,y/stgs.unitMeas.converter.length,t)*stgs.unitMeas.converter.length; %[m]*(umc.length)
     stgs.desiredShape.invertNormals = 1;
 
     %% Saving & Logger
