@@ -6,7 +6,7 @@
 
 **Multi bodY SimulaTor maxImal CoordinAtes**
 
-**mystica** is a library of classes and functions to simulate multibody systems.
+**mystica** is a matlab library to simulate the kinematics of multibody systems.
 **mystica** computes the system evolution modeling the problem using a state definition that we define _maximal_.
 The _maximal_ representation consists of a set of _non-minimum_ variables 𝐪 complemented by holonomic constraint g(𝐪) = 0.
 
