@@ -62,7 +62,7 @@ function install(input)
     mystica_meshes_fullpath = fullfile(mystica_fullpath,'meshes');
     matlab_path_env = strcat( mystica_meshes_fullpath , env_sep , matlab_path_env );
     system(sprintf('"%s" env config vars set MATLABPATH="%s" -p "%s"',mamba_full_path,matlab_path_env,env_full_path));
-    fprintf('Installing mystica root folder completed\n')
+    fprintf('Installing mystica meshes folder completed\n')
 
     %% Creation of setup.m
 
