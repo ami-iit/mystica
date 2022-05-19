@@ -44,8 +44,8 @@ classdef VisualizerMatlab < handle
             obj.figure                = figure;
             obj.dataLiveStatistics    = input.dataLiveStatistics;
 
-            obj.stgsVisualizer.joint.cone.stlName   = fullfile(fileparts(mfilename('fullpath')),'..','meshes','cone45.stl');
-            obj.stgsVisualizer.joint.sphere.stlName = fullfile(fileparts(mfilename('fullpath')),'..','meshes','sphere.stl');
+            obj.stgsVisualizer.joint.cone.stlName   = 'mystica_cone45.stl';
+            obj.stgsVisualizer.joint.sphere.stlName = 'mystica_sphere.stl';
 
             obj.getIndexesSimulation('stgsIntegrator',obj.stgsIntegrator)
             obj.getFigureMatrixLimits('MatrixMBodyPos_0',input.data.mBodyPosQuat_0(input.model.selector.indexes_mBodyPos_from_mBodyPosQuat,:))

@@ -37,7 +37,7 @@ function model = getModelCoverTriangleLinks(input)
 
     % Visual
     cellModel.assignLinkProperty('name','stlScale'    ,'value',meshDesign.linkDimension)
-    cellModel.assignLinkProperty('name','stlName'     ,'value',fullfile(fileparts(mfilename('fullpath')),'..','+viz','meshes','nodeSimplifiedTriangle.stl'))
+    cellModel.assignLinkProperty('name','stlName'     ,'value','mystica_nodeSimplifiedTriangle.stl')
     cellModel.assignLinkProperty('name','stlFaceColor','value',[0.5,0.7,0.9],'indexes',1:2:length(cellModel.cellLinks))
     cellModel.assignLinkProperty('name','stlFaceColor','value',[0.5,0.7,0.3],'indexes',2:2:length(cellModel.cellLinks))
     cellModel.assignLinkProperty('name','stlFaceColor','value',[0.00,0.40,0.40],'indexes',meshDesign.fixedLinksIndexes)
