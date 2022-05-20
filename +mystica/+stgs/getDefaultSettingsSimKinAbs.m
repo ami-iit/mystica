@@ -20,7 +20,7 @@ function stgs = getDefaultSettingsSimKinAbs(model,input)
 
     %% Saving & Logger
 
-    stgs.saving.workspace.run         = 1;
+    stgs.saving.workspace.run         = 0;
     stgs.saving.workspace.name        = ['kinAbs_',model.name,'_',strTime,'.mat'];
     stgs.saving.workspace.clearCasadi = 0;
 
@@ -39,7 +39,7 @@ function stgs = getDefaultSettingsSimKinAbs(model,input)
     stgs.integrator.solverOpts.RelTol = 1e-3;
     stgs.integrator.solverOpts.AbsTol = 1e-6;
 
-    stgs.integrator.dxdtOpts.assumeConstant = 0;
+    stgs.integrator.dxdtOpts.assumeConstant = 1;
     stgs.integrator.dxdtParam.baumgarteIntegralCoefficient = 5e1;
 
     stgs.integrator.statusTracker.workspacePrint.run        = 1;
@@ -120,13 +120,13 @@ function stgs = getDefaultSettingsSimKinAbs(model,input)
     stgs.visualizer.cameraView.mBodySimulation.values        = [-37.5,30];
     stgs.visualizer.cameraView.initialRotation.run           = 0;
     stgs.visualizer.cameraView.initialRotation.durationTotal = 3;
-    stgs.visualizer.cameraView.initialRotation.pause.start   = 1;
-    stgs.visualizer.cameraView.initialRotation.pause.end     = 1;
+    stgs.visualizer.cameraView.initialRotation.pause.start   = 0;
+    stgs.visualizer.cameraView.initialRotation.pause.end     = 0;
     stgs.visualizer.cameraView.initialRotation.values        = [0,0];
     stgs.visualizer.cameraView.finalRotation.run             = 0;
-    stgs.visualizer.cameraView.finalRotation.durationTotal   = 5;
-    stgs.visualizer.cameraView.finalRotation.pause.start     = 1;
-    stgs.visualizer.cameraView.finalRotation.pause.end       = 1;
+    stgs.visualizer.cameraView.finalRotation.durationTotal   = 3;
+    stgs.visualizer.cameraView.finalRotation.pause.start     = 0;
+    stgs.visualizer.cameraView.finalRotation.pause.end       = 0;
     stgs.visualizer.cameraView.finalRotation.values          = [90,0];
 
     stgs.visualizer.background = {};
