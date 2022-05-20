@@ -61,7 +61,7 @@ The function [`install()`](install.m) downloads [`mambaforge`](https://github.co
 
 
 #### ⚠️ Known issue
-For some versions of Ubuntu and Matlab, Matlab is not able to load the required libraries like CasADi (see [issue](https://github.com/ami-iit/mystica/issues/6) #6). A possible workaround is to launch `matlab` with LD_PRELOAD
+For some versions of Ubuntu and Matlab, Matlab is not able to load the required libraries like CasADi (see [issue](https://github.com/ami-iit/mystica/issues/6)). A possible workaround is to launch `matlab` with LD_PRELOAD
 ```
 LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6 matlab
 ```
