@@ -28,7 +28,7 @@ function stgs = getDefaultSettingsSimKinRel(model,input)
 
     stgs.stateKin.nullSpace.decompositionMethod    = 'qrFull';
     stgs.stateKin.nullSpace.rankRevealingMethod    = 'limitParFunRatioSingularValues';
-    stgs.stateKin.nullSpace.toleranceRankRevealing = [10 1e-5];
+    stgs.stateKin.nullSpace.toleranceRankRevealing = [10 1e-8];
 
     %% Integration Settings
 
