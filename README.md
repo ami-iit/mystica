@@ -23,6 +23,7 @@ The _maximal_ representation consists of a set of _non-minimum_ variables 𝐪 c
 
 - [:hammer: Dependencies](#hammer-dependencies)
 - [:floppy_disk: Installation](#floppy_disk-installation)
+    - [⚠️ Known issue](#️-known-issue)
 - [:rocket: Usage](#rocket-usage)
 - [:gear: Contributing](#gear-contributing)
 
@@ -60,11 +61,7 @@ The function [`install()`](install.m) downloads [`mambaforge`](https://github.co
 
 
 #### ⚠️ Known issue
-For some versions of Ubuntu and Matlab, Matlab is not able to load the required libraries like CasADi producing this error:
-```matlab
-Invalid MEX-file '.../envs/imorph/mex/casadiMEX.mexa64': /usr/lib/x86_64-linux-gnu/libstdc++.so.6: version 'GLIBCXX_3.4.26' not found
-``` 
-See also https://github.com/robotology/robotology-superbuild/issues/64). A possible workaround is to launch `matlab` with LD_PRELOAD
+For some versions of Ubuntu and Matlab, Matlab is not able to load the required libraries like CasADi (see issue #6). A possible workaround is to launch `matlab` with LD_PRELOAD
 ```
 LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6 matlab
 ```
