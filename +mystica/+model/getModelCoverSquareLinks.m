@@ -39,7 +39,7 @@ function model = getModelCoverSquareLinks(input)
 
     % Visual
     cellModel.assignLinkProperty('name','stlScale'    ,'value',meshDesign.linkDimension*[1 1 1])
-    cellModel.assignLinkProperty('name','stlName'     ,'value',fullfile(fileparts(mfilename('fullpath')),'..','+viz','meshes','nodeSquare.stl'))
+    cellModel.assignLinkProperty('name','stlName'     ,'value','mystica_nodeSquare.stl')
     cellModel.assignLinkProperty('name','stlFaceColor','value',[0.50,0.70,0.90],'indexes',find( getChessboardMask(input.n,input.m)))
     cellModel.assignLinkProperty('name','stlFaceColor','value',[0.45,0.75,0.85],'indexes',find(~getChessboardMask(input.n,input.m)))
     cellModel.assignLinkProperty('name','stlFaceColor','value',[0.00,0.40,0.40],'indexes',meshDesign.fixedLinksIndexes)
