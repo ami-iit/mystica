@@ -6,7 +6,7 @@ function rotateCameraView(obj,durationTotal,durationInitialPhase,durationFinalPh
 
     for indexStepRotation = 1 : nFrames
         tickInstantValue = indexStepRotation/nFrames;
-        deltaAngle  = wrapTo180(finalView - initialView);
+        deltaAngle  = [wrapDegTo180(finalView(1) - initialView(1)) wrapDegTo180(finalView(2) - initialView(2))];
         instantView = initialView + computeCompositeTrajectory(deltaAngle,tickInstantValue,tickInitialPause,tickFinalPause);
         view(instantView);
         if obj.stgsVisualizer.gif.save || obj.stgsVisualizer.video.save
@@ -28,5 +28,17 @@ function  finalPos = computeCompositeTrajectory(angleIncrement,tickInstantValue,
         finalPos = computeSinusoidalTrajectory(angleIncrement,(tickInstantValue-tickInitialPause)/(tickFinalPause-tickInitialPause));
     else
         finalPos = angleIncrement;
+    end
+end
+
+function q = wrapDegTo180(q)
+    if abs(q)>=360
+        q = mod(q,360);
+    end
+    if q > 180
+        q = q - 360;
+    end
+    if q < -180
+        q = 360 + q;
     end
 end
