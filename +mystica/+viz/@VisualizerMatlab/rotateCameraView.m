@@ -38,7 +38,7 @@ function q = wrapDegTo180(q)
     if q > 180
         q = q - 360;
     end
-    if q < -180
+    if q <= -180
         q = 360 + q;
     end
 end
