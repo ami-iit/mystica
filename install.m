@@ -31,7 +31,7 @@ function install(input)
 
     % Install all the packages via conda
     fprintf('Installing packages\n');
-    system(sprintf('"%s" create -n "%s" -y -c conda-forge -c robotology casadi-matlab-bindings "libblas=*=*openblas"\n', mamba_full_path,input.env_name));
+    system(sprintf('"%s" create -n "%s" -y -c conda-forge -c robotology casadi-matlab-bindings=3.5.5.2 "libblas=*=*openblas"\n', mamba_full_path,input.env_name));
     % see discussion https://github.com/ami-iit/element_morphing-cover-design/issues/215#issuecomment-1081515249 to understand why we added "libblas=*=*openblas"
     fprintf('Installation of packages completed\n');
 
