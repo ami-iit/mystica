@@ -12,15 +12,15 @@ function stgs = getDefaultSettingsSimKinRel(model,input)
 
     %% Desired shape
 
-    stgs.desiredShape.fun = @(x,y)   0.005*(5*cos(10*x-2)+5*cos(10*x-20*y));
-    stgs.desiredShape.fun = @(x,y,t) stgs.desiredShape.fun(x-t/8e1,y-t/8e1);
-    stgs.desiredShape.fun = @(x,y,t) stgs.desiredShape.fun(x,y,t)-stgs.desiredShape.fun(0,0,t);
-    stgs.desiredShape.fun = @(x,y,t) stgs.desiredShape.fun(x/stgs.unitMeas.converter.length,y/stgs.unitMeas.converter.length,t)*stgs.unitMeas.converter.length;
+    stgs.desiredShape.fun = @(x,y)   0.005*(5*cos(10*x-2)+5*cos(10*x-20*y)); %[m]
+    stgs.desiredShape.fun = @(x,y,t) stgs.desiredShape.fun(x-t/8e1,y-t/8e1); %[m]
+    stgs.desiredShape.fun = @(x,y,t) stgs.desiredShape.fun(x,y,t)-stgs.desiredShape.fun(0,0,t); %[m]
+    stgs.desiredShape.fun = @(x,y,t) stgs.desiredShape.fun(x/stgs.unitMeas.converter.length,y/stgs.unitMeas.converter.length,t)*stgs.unitMeas.converter.length; %[m]*(umc.length)
     stgs.desiredShape.invertNormals = 1;
 
     %% Saving & Logger
 
-    stgs.saving.workspace.run         = 1;
+    stgs.saving.workspace.run         = 0;
     stgs.saving.workspace.name        = ['kinRel_',model.name,'_',strTime,'.mat'];
     stgs.saving.workspace.clearCasadi = 0;
 
@@ -28,7 +28,7 @@ function stgs = getDefaultSettingsSimKinRel(model,input)
 
     stgs.stateKin.nullSpace.decompositionMethod    = 'qrFull';
     stgs.stateKin.nullSpace.rankRevealingMethod    = 'limitParFunRatioSingularValues';
-    stgs.stateKin.nullSpace.toleranceRankRevealing = [10 1e-5];
+    stgs.stateKin.nullSpace.toleranceRankRevealing = [10 1e-8];
 
     %% Integration Settings
 
@@ -39,7 +39,7 @@ function stgs = getDefaultSettingsSimKinRel(model,input)
     stgs.integrator.solverOpts.RelTol = 1e-3;
     stgs.integrator.solverOpts.AbsTol = 1e-6;
 
-    stgs.integrator.dxdtOpts.assumeConstant = 0;
+    stgs.integrator.dxdtOpts.assumeConstant = 1;
     stgs.integrator.dxdtParam.baumgarteIntegralCoefficient = 5e1;
     stgs.integrator.dxdtParam.regTermDampPInv = 1e-6;
 
@@ -139,13 +139,13 @@ function stgs = getDefaultSettingsSimKinRel(model,input)
     stgs.visualizer.cameraView.mBodySimulation.values        = [230 40];
     stgs.visualizer.cameraView.initialRotation.run           = 0;
     stgs.visualizer.cameraView.initialRotation.durationTotal = 3;
-    stgs.visualizer.cameraView.initialRotation.pause.start   = 1;
-    stgs.visualizer.cameraView.initialRotation.pause.end     = 1;
+    stgs.visualizer.cameraView.initialRotation.pause.start   = 0;
+    stgs.visualizer.cameraView.initialRotation.pause.end     = 0;
     stgs.visualizer.cameraView.initialRotation.values        = [0,0];
     stgs.visualizer.cameraView.finalRotation.run             = 0;
-    stgs.visualizer.cameraView.finalRotation.durationTotal   = 5;
-    stgs.visualizer.cameraView.finalRotation.pause.start     = 1;
-    stgs.visualizer.cameraView.finalRotation.pause.end       = 1;
+    stgs.visualizer.cameraView.finalRotation.durationTotal   = 3;
+    stgs.visualizer.cameraView.finalRotation.pause.start     = 0;
+    stgs.visualizer.cameraView.finalRotation.pause.end       = 0;
     stgs.visualizer.cameraView.finalRotation.values          = [90,0];
 
     stgs.visualizer.background = {};

@@ -6,7 +6,7 @@
 
 **Multi bodY SimulaTor maxImal CoordinAtes**
 
-**mystica** is a library of classes and functions to simulate multibody systems.
+**mystica** is a matlab library to simulate the kinematics of multibody systems.
 **mystica** computes the system evolution modeling the problem using a state definition that we define _maximal_.
 The _maximal_ representation consists of a set of _non-minimum_ variables 𝐪 complemented by holonomic constraint g(𝐪) = 0.
 
@@ -59,12 +59,8 @@ The function [`install()`](install.m) downloads [`mambaforge`](https://github.co
 </details>
 
 
-#### ⚠️ Known issue
-For some versions of Ubuntu and Matlab, Matlab is not able to load the required libraries like CasADi producing this error:
-```matlab
-Invalid MEX-file '.../envs/imorph/mex/casadiMEX.mexa64': /usr/lib/x86_64-linux-gnu/libstdc++.so.6: version 'GLIBCXX_3.4.26' not found
-``` 
-See also https://github.com/robotology/robotology-superbuild/issues/64). A possible workaround is to launch `matlab` with LD_PRELOAD
+⚠️ **Known issue**
+For some versions of Ubuntu and Matlab, Matlab is not able to load the required libraries like CasADi (see [issue](https://github.com/ami-iit/mystica/issues/6)). A possible workaround is to launch `matlab` with LD_PRELOAD
 ```
 LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6 matlab
 ```

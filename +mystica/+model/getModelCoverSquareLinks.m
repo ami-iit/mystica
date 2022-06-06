@@ -4,15 +4,22 @@ function model = getModelCoverSquareLinks(input)
         input.m
         input.restConfiguration {mustBeMember(input.restConfiguration,{'flat','cylinder'})}
         input.linkDimension %[m]
+        input.fixedLinksIndexes = []
+        input.baseIndex         = 1;
+        input.tform_0_bBase     = eye(4); %[m]
     end
-
 
     [umc,meshDesign.unitMeas]=mystica.model.setUM('length','m','mass','kg');
 
     meshDesign.shape = 'square';
-    meshDesign.baseIndex = 1;
-    meshDesign.fixedLinksIndexes = [meshDesign.baseIndex];
-    meshDesign.tform_0_bBase = mystica.rbm.getTformGivenPosRotm(zeros(3,1)*(umc.length),mystica.rbm.getRotmGivenEul('rz',0)); %[m]*(umc.length)
+    meshDesign.baseIndex = input.baseIndex;
+    if isempty(input.fixedLinksIndexes)
+        meshDesign.fixedLinksIndexes = [meshDesign.baseIndex];
+    else
+        meshDesign.fixedLinksIndexes = input.fixedLinksIndexes;
+    end
+    meshDesign.tform_0_bBase = input.tform_0_bBase; %[m]
+    meshDesign.tform_0_bBase(1:3,4) = meshDesign.tform_0_bBase(1:3,4)*(umc.length); %[m]*(umc.length)
     meshDesign.linkDimension = input.linkDimension*(umc.length); %[m]*(umc.length)
 
     switch input.restConfiguration
@@ -20,8 +27,8 @@ function model = getModelCoverSquareLinks(input)
             meshDesign.rzi_pj0_cj0 = 0;
             meshDesign.rzj_pj0_cj0 = 0;
         case 'cylinder'
-            meshDesign.rzi_pj0_cj0 = 2*pi/input.n;
-            meshDesign.rzj_pj0_cj0 = 0;
+            meshDesign.rzi_pj0_cj0 = 0;
+            meshDesign.rzj_pj0_cj0 = 2*pi/input.m;
     end
 
     input.name = [meshDesign.shape,sprintf('_%ix%i',input.n,input.m)];
