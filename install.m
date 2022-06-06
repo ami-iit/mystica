@@ -28,10 +28,6 @@ function install(input)
     fprintf('Installing MATLAB/Simulink binaries in %s\n', install_prefix);
 
     [mamba_full_path,env_full_path] = configure_mambaforge(input.mambaforge_prefix,install_prefix,input.env_name);
-    
-    if ismac || isunix
-        mamba_full_path
-    end
 
     % Install all the packages via conda
     fprintf('Installing packages\n');
