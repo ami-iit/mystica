@@ -28,6 +28,10 @@ function install(input)
     fprintf('Installing MATLAB/Simulink binaries in %s\n', install_prefix);
 
     [mamba_full_path,env_full_path] = configure_mambaforge(input.mambaforge_prefix,install_prefix,input.env_name);
+    
+    if ismac || isunix
+        mamba_full_path
+    end
 
     % Install all the packages via conda
     fprintf('Installing packages\n');
@@ -165,6 +169,7 @@ function [mamba_full_path,env_full_path] = configure_mambaforge(mambaforge_prefi
             % subdirectory of the prefix
         elseif isunix
             system(sprintf('sh %s -b -p "%s"', mambaforge_installer_name, install_prefix));
+            assert(length(['#!',install_prefix,'/bin/python'])<127,'install_prefix path is too long! Shebangs cannot be longer than 127 characters (see https://github.com/robotology/robotology-superbuild/pull/1145)')
             mamba_full_path = fullfile(install_prefix,'bin','mamba');
         end
         fprintf('Installation of mambaforge completed\n');
