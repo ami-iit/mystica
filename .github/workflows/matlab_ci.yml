@@ -34,7 +34,7 @@ jobs:
         uses: matlab-actions/run-command@v1
         with:
           command: |
-            install('env_name','imorph')
+            install()
 
       # workaround for https://github.com/robotology/robotology-superbuild/issues/64 and https://github.com/ami-iit/mystica/issues/6
       - name: Do not use MATLAB's stdc++ to avoid incompatibilities with other libraries
