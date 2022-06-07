@@ -2,6 +2,7 @@
 
 <p align="left">
    <a href="https://github.com/ami-iit/mystica/blob/master/LICENSE"><img src="https://img.shields.io/github/license/ami-iit/mystica" alt="Size" class="center"/></a>
+  <a href="https://github.com/ami-iit/mystica/actions/workflows/matlab_ci.yml"><img src="https://github.com/ami-iit/mystica/actions/workflows/matlab_ci.yml/badge.svg?branch=main" alt="CI"/></a>
 </p>
 
 **Multi bodY SimulaTor maxImal CoordinAtes**
