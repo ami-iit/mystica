@@ -1,7 +1,7 @@
 classdef IntegratorDynRel < mystica.intgr.Integrator
     %INTEGRATOR Summary of this class goes here
     %   Detailed explanation goes here
-    
+
     properties (SetAccess=protected,GetAccess=public)
         motorsCurrent %input
         mBodyPosVel_0 %x
@@ -10,7 +10,7 @@ classdef IntegratorDynRel < mystica.intgr.Integrator
     properties (SetAccess=immutable,GetAccess=public)
         dt
     end
-    
+
     methods
         function obj = IntegratorDynRel(input)
             arguments
@@ -25,7 +25,7 @@ classdef IntegratorDynRel < mystica.intgr.Integrator
                 'stgsIntegrator',input.stgsIntegrator);
             obj.dt = input.dt;
         end
-        
+
         function xf =  integrate(obj,input)
             arguments
                 obj
@@ -33,13 +33,13 @@ classdef IntegratorDynRel < mystica.intgr.Integrator
                 input.stateDynMBody
                 input.model
             end
-            
+
             obj.ti = obj.ti + obj.dt;
             obj.tf = obj.tf + obj.dt;
-            
+
             obj.motorsCurrent = input.motorsCurrent;
             obj.mBodyPosVel_0 = input.stateDynMBody.mBodyPosVel_0;
-            
+
             switch obj.solverOpts.name
                 case {'rk','cvodes'}
                     x    = casadi.MX.sym('x',input.model.constants.mBodyPosVel,1);
@@ -70,15 +70,15 @@ classdef IntegratorDynRel < mystica.intgr.Integrator
                     error('not valid solver')
             end
             xf = obj.integrate@mystica.intgr.Integrator('dxdt',dxdt,'xi',obj.mBodyPosVel_0,'ti',obj.ti,'tf',obj.tf);
-            
+
             if obj.dxdtOpts.assumeConstant == 0
                 % because the stateDynMBody (handle class) is updated
                 % inside the method get_mBodyVelAcc0_from_motorsCurrent
                 input.stateDynMBody.setMBodyPosVel('model',input.model,'mBodyPosVel_0',obj.mBodyPosVel_0)
             end
-            
-            
+
+
         end
     end
-    
+
 end

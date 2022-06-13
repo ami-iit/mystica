@@ -40,7 +40,7 @@ function [data,stateKin] = runSimKinAbs(input)
 
     for k = kVec
         % Controller
-        mBodyTwist_0 = contr.solve('time',tout(k),'stateKinMBody',stateKin,'model',model);
+        mBodyTwist_0 = contr.solve('time',tout(k),'stateKinMBody',stateKin,'model',model) * stgs.controller.applyControlInput;
         % Integrator
         mBodyPosQuat_0 = intgr.integrate('stateKinMBody',stateKin,'mBodyTwist_0',mBodyTwist_0,'model',model);
         % Logger

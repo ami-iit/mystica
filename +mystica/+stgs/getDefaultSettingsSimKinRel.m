@@ -39,7 +39,7 @@ function stgs = getDefaultSettingsSimKinRel(model,input)
     stgs.integrator.solverOpts.RelTol = 1e-3;
     stgs.integrator.solverOpts.AbsTol = 1e-6;
 
-    stgs.integrator.dxdtOpts.assumeConstant = 1;
+    stgs.integrator.dxdtOpts.assumeConstant = 0;
     stgs.integrator.dxdtParam.baumgarteIntegralCoefficient = 5e1;
     stgs.integrator.dxdtParam.regTermDampPInv = 1e-6;
 
@@ -51,6 +51,8 @@ function stgs = getDefaultSettingsSimKinRel(model,input)
     stgs.integrator.statusTracker.limitMaximumTime          = stgs.integrator.limitMaximumTime;
 
     %% Controller
+
+    stgs.controller.applyControlInput = true;
 
     stgs.controller.casadi.optimizationType = 'conic';
     stgs.controller.casadi.solver           = 'osqp';

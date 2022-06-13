@@ -44,7 +44,7 @@ function [data,stateDyn] = runSimDynRel(input)
 
     for k = kVec
         % Controller
-        motorsCurrent = contr.solve('stateDynMBody',stateDyn,'time',tout(k),'model',model);
+        motorsCurrent = contr.solve('stateDynMBody',stateDyn,'time',tout(k),'model',model) * stgs.controller.applyControlInput;
         % Integrator
         mBodyPosVel_0 = intgr.integrate('stateDynMBody',stateDyn,'motorsCurrent',motorsCurrent,'model',model);
         stateDyn.setMBodyPosQuat('mBodyPosQuat_0',stateDyn.mBodyPosQuat_0,'model',model);

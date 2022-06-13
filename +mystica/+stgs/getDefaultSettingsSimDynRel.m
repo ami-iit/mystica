@@ -12,10 +12,10 @@ function stgs = getDefaultSettingsSimDynRel(model,input)
 
     %% Desired shape
 
-    stgs.desiredShape.fun = @(x,y)   0.005*(5*cos(10*x-2)+5*cos(10*x-20*y));
-    stgs.desiredShape.fun = @(x,y,t) stgs.desiredShape.fun(x-t/8e1,y-t/8e1);
-    stgs.desiredShape.fun = @(x,y,t) stgs.desiredShape.fun(x,y,t)-stgs.desiredShape.fun(0,0,t);
-    stgs.desiredShape.fun = @(x,y,t) stgs.desiredShape.fun(x/stgs.unitMeas.converter.length,y/stgs.unitMeas.converter.length,t)*stgs.unitMeas.converter.length;
+    stgs.desiredShape.fun = @(x,y)   0.005*(5*cos(10*x-2)+5*cos(10*x-20*y)); %[m]
+    stgs.desiredShape.fun = @(x,y,t) stgs.desiredShape.fun(x-t/8e1,y-t/8e1); %[m]
+    stgs.desiredShape.fun = @(x,y,t) stgs.desiredShape.fun(x,y,t)-stgs.desiredShape.fun(0,0,t); %[m]
+    stgs.desiredShape.fun = @(x,y,t) stgs.desiredShape.fun(x/stgs.unitMeas.converter.length,y/stgs.unitMeas.converter.length,t)*stgs.unitMeas.converter.length; %[m]*(umc.length)
     stgs.desiredShape.invertNormals = 1;
 
     %% Saving & Logger
@@ -54,6 +54,8 @@ function stgs = getDefaultSettingsSimDynRel(model,input)
     stgs.integrator.statusTracker.limitMaximumTime          = stgs.integrator.limitMaximumTime;
 
     %% Controller
+
+    stgs.controller.applyControlInput = true;
 
     stgs.controller.casadi.optimizationType = 'conic';
     stgs.controller.casadi.solver           = 'osqp';

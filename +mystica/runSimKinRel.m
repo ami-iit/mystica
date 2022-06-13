@@ -47,7 +47,7 @@ function [data,stateKin] = runSimKinRel(input)
 
     for k = kVec
         % Controller
-        motorsAngVel      = contr.solve('stateKinMBody',stateKinNoise,'time',tout(k),'model',model);
+        motorsAngVel      = contr.solve('stateKinMBody',stateKinNoise,'time',tout(k),'model',model)  * stgs.controller.applyControlInput;
         motorsAngVelNoise = noise.applyInputCompression('motorsAngVel',motorsAngVel);
         % Integrator
         mBodyPosQuat_0 = intgr.integrate('stateKinMBody',stateKin,'motorsAngVel',motorsAngVelNoise,'model',model);

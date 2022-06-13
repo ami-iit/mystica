@@ -12,7 +12,7 @@ function stgs = getDefaultSettingsSimKinAbs(model,input)
 
     %% Desired shape
 
-    stgs.desiredShape.fun = @(x,y)   -1*( ((x-0.15)*2).^2+((y+0.15)*2).^2); %[m]
+    stgs.desiredShape.fun = @(x,y)   -1*(x.^2+y.^2)*5; %[m]
     stgs.desiredShape.fun = @(x,y,t) stgs.desiredShape.fun(x,y); %[m]
     stgs.desiredShape.fun = @(x,y,t) stgs.desiredShape.fun(x,y,t)-stgs.desiredShape.fun(0,0,t); %[m]
     stgs.desiredShape.fun = @(x,y,t) stgs.desiredShape.fun(x/stgs.unitMeas.converter.length,y/stgs.unitMeas.converter.length,t)*stgs.unitMeas.converter.length; %[m]*(umc.length)
@@ -39,7 +39,7 @@ function stgs = getDefaultSettingsSimKinAbs(model,input)
     stgs.integrator.solverOpts.RelTol = 1e-3;
     stgs.integrator.solverOpts.AbsTol = 1e-6;
 
-    stgs.integrator.dxdtOpts.assumeConstant = 1;
+    stgs.integrator.dxdtOpts.assumeConstant = 0;
     stgs.integrator.dxdtParam.baumgarteIntegralCoefficient = 5e1;
 
     stgs.integrator.statusTracker.workspacePrint.run        = 1;
@@ -50,6 +50,8 @@ function stgs = getDefaultSettingsSimKinAbs(model,input)
     stgs.integrator.statusTracker.limitMaximumTime          = stgs.integrator.limitMaximumTime;
 
     %% Controller
+
+    stgs.controller.applyControlInput = true;
 
     stgs.controller.casadi.optimizationType = 'conic';
     stgs.controller.casadi.solver           = 'osqp';

@@ -62,7 +62,7 @@ classdef VisualizerMatlab < handle
             ylim(ylim)
             ZlimTemp = zlim;
             %zlim([ min([ZlimTemp(1) obj.figureMatrixLimits(3,1)]) , max([ZlimTemp(2) obj.figureMatrixLimits(3,2)]) ])
-            zlim([obj.figureMatrixLimits(3,1) obj.figureMatrixLimits(3,2)])
+            %zlim([obj.figureMatrixLimits(3,1) obj.figureMatrixLimits(3,2)])
 
             view(obj.stgsVisualizer.cameraView.mBodySimulation.values)
             camlight('headlight');
