@@ -66,7 +66,23 @@ function [mBodyVelAcc_0,varargout] = get_mBodyVelAcc0_from_motorsCurrent(obj,inp
             % Optimization (CasADi)
             %-----------------------------------------------------------------%
 
-            [mBodyVelAcc_0,jointsWrenchConstr_PJ] = obj.csdFn.mBodyVelAcc_0(obj.mBodyPosVel_0,input.motorsCurrent);
+            if 0
+                [mBodyVelAcc_0,jointsWrenchConstr_PJ] = obj.csdFn.mBodyVelAcc_0(obj.mBodyPosVel_0,input.motorsCurrent);
+            else
+                obj.opti.set_value(obj.optiVar.mBodyPosVel,obj.mBodyPosVel_0);
+                obj.opti.set_value(obj.optiVar.motorsCurrent,input.motorsCurrent);
+                sol = obj.opti.solve();
+                X = sol.value(obj.optiVar.X);
+
+                mBodyTwist_0     = obj.mBodyPosVel_0(input.model.selector.indexes_mBodyTwist_from_mBodyPosVel);
+                mBodyVelQuat_0   = sparse(obj.csdFn.get_mBodyVelQuat0_from_mBodyTwist0(obj.mBodyPosQuat_0,mBodyTwist_0,input.kBaum));
+
+                mBodyTwAcc_0          = X(1:input.model.constants.mBodyTwist,1);
+                jointsWrenchConstr_PJ = X(input.model.constants.mBodyTwist+1:end,1);
+                mBodyVelAcc_0 = [mBodyVelQuat_0 ; mBodyTwAcc_0];
+
+                obj.setMBodyPosQuat('mBodyPosQuat_0',obj.mBodyPosQuat_0,'model',input.model);
+            end
 
             mBodyVelAcc_0         = full(mBodyVelAcc_0);
             jointsWrenchConstr_PJ = full(jointsWrenchConstr_PJ);
@@ -81,11 +97,6 @@ function [mBodyVelAcc_0,varargout] = get_mBodyVelAcc0_from_motorsCurrent(obj,inp
     end
     if nargout > 2
         varargout{2} = mBodyWrenchExt_0;
-    end
-
-    k = 1e3;
-    if input.t*k-floor(input.t*k)<1e-2
-        disp(input.t)
     end
 
 end

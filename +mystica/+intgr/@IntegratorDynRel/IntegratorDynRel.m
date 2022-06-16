@@ -55,7 +55,8 @@ classdef IntegratorDynRel < mystica.intgr.Integrator
                             'kBaum',obj.dxdtParam.baumgarteIntegralCoefficient,...
                             'model',input.model,...
                             'kFeedbackJcV',obj.dxdtParam.feedbackJacobianConstraintsV,...
-                            'solverTechnique',obj.dxdtOpts.solverTechnique);
+                            'solverTechnique',obj.dxdtOpts.solverTechnique,...
+                            't',t);
                         dxdt = @(t,x) obj.mBodyVelAcc_0;
                     else
                         dxdt = @(t,x) input.stateDynMBody.get_mBodyVelAcc0_from_motorsCurrent(...
@@ -64,7 +65,8 @@ classdef IntegratorDynRel < mystica.intgr.Integrator
                             'model',input.model,...
                             'kFeedbackJcV',obj.dxdtParam.feedbackJacobianConstraintsV,...
                             'mBodyPosVel_0_warningOnlyIfNecessary',x,...
-                            'solverTechnique',obj.dxdtOpts.solverTechnique);
+                            'solverTechnique',obj.dxdtOpts.solverTechnique,...
+                            't',t);
                     end
                 otherwise
                     error('not valid solver')
@@ -74,7 +76,8 @@ classdef IntegratorDynRel < mystica.intgr.Integrator
             if obj.dxdtOpts.assumeConstant == 0
                 % because the stateDynMBody (handle class) is updated
                 % inside the method get_mBodyVelAcc0_from_motorsCurrent
-                input.stateDynMBody.setMBodyPosVel('model',input.model,'mBodyPosVel_0',obj.mBodyPosVel_0)
+                input.stateDynMBody.setMBodyPosVel( 'model',input.model,'mBodyPosVel_0' ,obj.mBodyPosVel_0)
+                input.stateDynMBody.setMBodyPosQuat('model',input.model,'mBodyPosQuat_0',obj.mBodyPosVel_0(input.model.selector.indexes_mBodyPosQuat_from_mBodyPosVel));
             end
 
 

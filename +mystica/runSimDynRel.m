@@ -47,6 +47,7 @@ function [data,stateDyn] = runSimDynRel(input)
         motorsCurrent = contr.solve('stateDynMBody',stateDyn,'time',tout(k),'model',model) * stgs.controller.applyControlInput;
         % Integrator
         mBodyPosVel_0 = intgr.integrate('stateDynMBody',stateDyn,'motorsCurrent',motorsCurrent,'model',model);
+        stateDyn.setMBodyPosVel('mBodyPosVel_0',mBodyPosVel_0,'model',model);
         stateDyn.setMBodyPosQuat('mBodyPosQuat_0',stateDyn.mBodyPosQuat_0,'model',model);
         % Logger
         data.store('indexIteration',k,'time',tout(k),'model',model,'controller',contr,'stateDynMBody',stateDyn,'motorsCurrent',motorsCurrent,...
