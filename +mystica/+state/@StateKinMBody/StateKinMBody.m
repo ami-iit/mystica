@@ -42,6 +42,9 @@ classdef StateKinMBody < matlab.mixin.Copyable
                 'decompositionMethod'   ,obj.stgs.nullSpace.decompositionMethod,...
                 'rankRevealingMethod'   ,obj.stgs.nullSpace.rankRevealingMethod,...
                 'toleranceRankRevealing',obj.stgs.nullSpace.toleranceRankRevealing);
+            % generate MEX file containing casadi funtions
+            obj.generateMEX();
+            % Evaluate initial state
             obj.setMBodyPosQuat('mBodyPosQuat_0',input.mBodyPosQuat_0,'model',input.model)
             obj.mBodyPosQuat_0_initial = obj.mBodyPosQuat_0;
             input.model.constants.setNumberConstraints(size(obj.Jc,1)); % Note: @mystica.model.Model and @Constants are two handle classes! We are modifying model.constants in the main file
@@ -56,7 +59,20 @@ classdef StateKinMBody < matlab.mixin.Copyable
         end
 
         function intJcV = getIntJcV(obj)
-            intJcV = full(obj.csdFn.intJcV(obj.mBodyPosQuat_0,obj.mBodyPosQuat_0_initial));
+            intJcV = full(mystica_stateKin('intJcV',obj.mBodyPosQuat_0,obj.mBodyPosQuat_0_initial)); % obj.csdFn.intJcV(obj.mBodyPosQuat_0,obj.mBodyPosQuat_0_initial)
+        end
+
+        function generateMEX(obj)
+            opts = struct('main', true,'mex', true);
+            C = casadi.CodeGenerator('mystica_stateKin.c',opts);
+            C.add(obj.csdFn.Jc);
+            C.add(obj.csdFn.intJcV);
+            C.add(obj.csdFn.rC_from_jointsAngVelPJ_2_jointsAngVel0);
+            C.add(obj.csdFn.rC_from_mBodyTwist0_2_jointsAngVelPJ);
+            C.add(obj.csdFn.get_mBodyVelQuat0_from_mBodyTwist0)
+            C.generate();
+            mex mystica_stateKin.c -largeArrayDims
+            delete('mystica_stateKin.c')
         end
 
         mBodyVelQuat    = get_mBodyVelQuat0_from_mBodyTwist0(obj,input);

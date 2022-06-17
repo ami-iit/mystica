@@ -52,6 +52,7 @@ function [data,stateKin] = runSimKinAbs(input)
     %% Saving Workspace
 
     clear ans k kVec mBodyTwist_0 mBodyPosQuat_0 tout
+    mystica.utils.deleteGeneratedMEX
 
     if stgs.saving.workspace.run
         if stgs.saving.workspace.clearCasadi

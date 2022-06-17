@@ -25,10 +25,10 @@ function getReferenceConversion(obj,model)
     end
     
     obj.csdSy.rC_from_mBodyTwist0_2_jointsAngVelPJ = vertcat(rC_from_mBodyTwist0_2_jointsAngVelPJ{:});
-    obj.csdFn.rC_from_mBodyTwist0_2_jointsAngVelPJ = casadi.Function('rC_w_V',{obj.csdSy.mBodyPosQuat_0},{obj.csdSy.rC_from_mBodyTwist0_2_jointsAngVelPJ});
+    obj.csdFn.rC_from_mBodyTwist0_2_jointsAngVelPJ = casadi.Function('rC_from_mBodyTwist0_2_jointsAngVelPJ',{obj.csdSy.mBodyPosQuat_0},{obj.csdSy.rC_from_mBodyTwist0_2_jointsAngVelPJ});
     
     obj.csdSy.rC_from_jointsAngVelPJ_2_jointsAngVel0 = mystica.utils.getCasadiMatrixWithStructuredZeros(blkdiag(rC_from_jointsAngVelPJ_2_jointsAngVel0{:}),'casadiType','SX');
-    obj.csdFn.rC_from_jointsAngVelPJ_2_jointsAngVel0 = casadi.Function('rC_0_PJ',{obj.csdSy.mBodyPosQuat_0},{obj.csdSy.rC_from_jointsAngVelPJ_2_jointsAngVel0});
+    obj.csdFn.rC_from_jointsAngVelPJ_2_jointsAngVel0 = casadi.Function('rC_from_jointsAngVelPJ_2_jointsAngVel0',{obj.csdSy.mBodyPosQuat_0},{obj.csdSy.rC_from_jointsAngVelPJ_2_jointsAngVel0});
     
     %% get_mBodyVelQuat0_from_mBodyTwist0
     
@@ -40,7 +40,7 @@ function getReferenceConversion(obj,model)
     linkVelQuat_0 = casadi.Function('f',{linkPosQuat_0,linkTwist_0},{[mystica.rbm.getPosGivenTwist(linkTwist_0);...
              mystica.rbm.getDotQuatGivenAngVel0(mystica.rbm.getQuatGivenPosQuat(linkPosQuat_0),mystica.rbm.getAngVelGivenTwist(linkTwist_0),kBaum)]});
     mBodyVelQuat0_csdFn_matrix = linkVelQuat_0.map(model.nLink);
-    obj.csdFn.get_mBodyVelQuat0_from_mBodyTwist0 = casadi.Function('f',{obj.csdSy.mBodyPosQuat_0,mBodyTwist_0,kBaum},{reshape(mBodyVelQuat0_csdFn_matrix(...
+    obj.csdFn.get_mBodyVelQuat0_from_mBodyTwist0 = casadi.Function('get_mBodyVelQuat_from_mBodyTwist',{obj.csdSy.mBodyPosQuat_0,mBodyTwist_0,kBaum},{reshape(mBodyVelQuat0_csdFn_matrix(...
         reshape(obj.csdSy.mBodyPosQuat_0,model.constants.linkPosQuat,model.nLink),...
         reshape(mBodyTwist_0,model.constants.linkTwist,model.nLink)),model.constants.mBodyPosQuat,1)});
     

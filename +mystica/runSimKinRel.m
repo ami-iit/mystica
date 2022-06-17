@@ -62,6 +62,7 @@ function [data,stateKin] = runSimKinRel(input)
     %% Saving Workspace
 
     clear ans k kVec motorsAngVel motorsAngVelNoise mBodyPosQuat_0 tout dataLiveStatistics
+    mystica.utils.deleteGeneratedMEX
 
     if stgs.saving.workspace.run
         if stgs.saving.workspace.clearCasadi
