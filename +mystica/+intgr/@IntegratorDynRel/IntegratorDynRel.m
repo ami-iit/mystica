@@ -77,9 +77,7 @@ classdef IntegratorDynRel < mystica.intgr.Integrator
                 % because the stateDynMBody (handle class) is updated
                 % inside the method get_mBodyVelAcc0_from_motorsCurrent
                 input.stateDynMBody.setMBodyPosVel( 'model',input.model,'mBodyPosVel_0' ,obj.mBodyPosVel_0)
-                input.stateDynMBody.setMBodyPosQuat('model',input.model,'mBodyPosQuat_0',obj.mBodyPosVel_0(input.model.selector.indexes_mBodyPosQuat_from_mBodyPosVel));
             end
-
 
         end
     end

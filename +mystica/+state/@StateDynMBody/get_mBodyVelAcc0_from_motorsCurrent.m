@@ -19,10 +19,6 @@ function [mBodyVelAcc_0,varargout] = get_mBodyVelAcc0_from_motorsCurrent(obj,inp
     % - Compute `mBodyVelAcc0` and `jointsWrenchConstr_PJ`
     %---------------------------------------------------------------------%
 
-    if isfield(input,'mBodyPosVel_0_warningOnlyIfNecessary')
-        obj.setMBodyPosVel('mBodyPosVel_0',input.mBodyPosVel_0_warningOnlyIfNecessary,'model',input.model)
-    end
-
     switch stgs.solverTechnique
         case 'inv'
 
@@ -30,7 +26,9 @@ function [mBodyVelAcc_0,varargout] = get_mBodyVelAcc0_from_motorsCurrent(obj,inp
             % Inverse
             %-----------------------------------------------------------------%
 
-            obj.setMBodyPosQuat('mBodyPosQuat_0',obj.mBodyPosQuat_0,'model',input.model);
+            if isfield(input,'mBodyPosVel_0_warningOnlyIfNecessary')
+                obj.setMBodyPosVel('mBodyPosVel_0',input.mBodyPosVel_0_warningOnlyIfNecessary,'model',input.model)
+            end
 
             kpFeedbackJcV = input.kFeedbackJcV(1);
             kiFeedbackJcV = input.kFeedbackJcV(2);
@@ -66,6 +64,11 @@ function [mBodyVelAcc_0,varargout] = get_mBodyVelAcc0_from_motorsCurrent(obj,inp
             % Optimization (CasADi)
             %-----------------------------------------------------------------%
 
+            if isfield(input,'mBodyPosVel_0_warningOnlyIfNecessary')
+                % 'reduced' method to avoid the computation of nullspace
+                obj.setMBodyPosVel('mBodyPosVel_0',input.mBodyPosVel_0_warningOnlyIfNecessary,'model',input.model,'method','reduced')
+            end
+
             if 0
                 [mBodyVelAcc_0,jointsWrenchConstr_PJ] = obj.csdFn.mBodyVelAcc_0(obj.mBodyPosVel_0,input.motorsCurrent);
             else
@@ -80,8 +83,6 @@ function [mBodyVelAcc_0,varargout] = get_mBodyVelAcc0_from_motorsCurrent(obj,inp
                 mBodyTwAcc_0          = X(1:input.model.constants.mBodyTwist,1);
                 jointsWrenchConstr_PJ = X(input.model.constants.mBodyTwist+1:end,1);
                 mBodyVelAcc_0 = [mBodyVelQuat_0 ; mBodyTwAcc_0];
-
-                obj.setMBodyPosQuat('mBodyPosQuat_0',obj.mBodyPosQuat_0,'model',input.model);
             end
 
             mBodyVelAcc_0         = full(mBodyVelAcc_0);
