@@ -75,7 +75,11 @@ classdef StateKinMBody < matlab.mixin.Copyable
             C.add(obj.csdFn.get_mBodyVelQuat0_from_mBodyTwist0)
             C.generate();
             fileID = fopen([nameMEX,'.c']    ,'r'); new_code = fscanf(fileID,'%s'); fclose(fileID);
-            fileID = fopen([nameMEX,'_old.c'],'r'); old_code = fscanf(fileID,'%s'); fclose(fileID);
+            if exist([nameMEX,'_old.c'],'file')
+                fileID = fopen([nameMEX,'_old.c'],'r'); old_code = fscanf(fileID,'%s'); fclose(fileID);
+            else
+                old_code = '';
+            end
             if ~strcmp(new_code,old_code) || isempty(dir([nameMEX,'.mex*']))
                 fprintf('generating %s.mex\n',nameMEX)
                 mex([nameMEX,'.c'],'-largeArrayDims')
