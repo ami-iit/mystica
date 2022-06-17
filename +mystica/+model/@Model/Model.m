@@ -19,9 +19,6 @@ classdef Model < matlab.mixin.Copyable
         linksAttributes
         selector
     end
-    properties (SetAccess=protected,GetAccess=protected)
-        linksState
-    end
     properties (SetAccess=immutable,GetAccess=private)
         graph
     end
@@ -52,6 +49,7 @@ classdef Model < matlab.mixin.Copyable
                     'joints'         ,nJointArray(any(obj.graph.Edges.EndNodes == i,2)),...
                     'mass'           ,cellLinks{i}.mass,...
                     'inertiaTens_g_g',cellLinks{i}.inertiaTens_g_g,...
+                    'tform_0_b'      ,cellLinks{i}.tform_0_b,...
                     'tform_b_j'      ,cellLinks{i}.tform_b_j,...
                     'tform_b_g'      ,cellLinks{i}.tform_b_g,...
                     'fixed'          ,cellLinks{i}.fixed,...
@@ -62,7 +60,6 @@ classdef Model < matlab.mixin.Copyable
                     'stlName'        ,cellLinks{i}.stlName,...
                     'constants'      ,obj.constants);
 
-                obj.linksState{i} = mystica.state.LinkState('tform',cellLinks{i}.tform_0_b);
                 obj.indexBase     = (cellLinks{i}.baseLink == 1) * i + (cellLinks{i}.baseLink == 0) * obj.indexBase;
 
                 if cellLinks{i}.fixed
@@ -140,7 +137,7 @@ classdef Model < matlab.mixin.Copyable
         function mBodyPosQuat_0 = getMBodyPosQuatRestConfiguration(obj)
             mBodyPosQuat_0 = zeros(obj.constants.mBodyPosQuat,1);
             for i = 1 : obj.nLink
-                mBodyPosQuat_0(obj.linksAttributes{i}.selector.indexes_linkPosQuat_from_mBodyPosQuat) = mystica.rbm.getPosQuatGivenTform(obj.linksState{i}.tform_0_b);
+                mBodyPosQuat_0(obj.linksAttributes{i}.selector.indexes_linkPosQuat_from_mBodyPosQuat) = mystica.rbm.getPosQuatGivenTform(obj.linksAttributes{i}.tform_0_b);
             end
         end
 

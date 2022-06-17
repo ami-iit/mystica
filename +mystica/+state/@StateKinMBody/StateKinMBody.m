@@ -11,7 +11,6 @@ classdef StateKinMBody < matlab.mixin.Copyable
         nullJc_jointsAngVel_PJ
         linIndRowJc
         referenceConversion
-        linksState
         csdFn
         stgs
     end
@@ -32,12 +31,8 @@ classdef StateKinMBody < matlab.mixin.Copyable
             obj.csdSy.mBodyPosQuat_0 = casadi.SX.sym('x',input.model.constants.mBodyPosQuat,1);
 
             % links initialization
-            obj.linksState{input.model.nLink} = {};
-            for i = 1 : input.model.nLink
-                obj.linksState{i} = mystica.state.LinkState('csdMBodyPosQuat',obj.csdSy.mBodyPosQuat_0,'indexesLinkPosQuat',input.model.linksAttributes{i}.selector.indexes_linkPosQuat_from_mBodyPosQuat);
-            end
             obj.getJacobianConstraints(input.model)
-            obj.getReferenceConversion(input.model)
+            obj.getKinematicQuantities(input.model)
             obj.nullEvaluator = mystica.utils.NullSpace(...
                 'decompositionMethod'   ,obj.stgs.nullSpace.decompositionMethod,...
                 'rankRevealingMethod'   ,obj.stgs.nullSpace.rankRevealingMethod,...
@@ -53,9 +48,6 @@ classdef StateKinMBody < matlab.mixin.Copyable
         function clearProperties(obj)
             obj.csdFn = [];
             obj.csdSy = [];
-            for i = 1 : length(obj.linksState)
-                obj.linksState{i}.clearCasadi
-            end
         end
 
         function intJcV = getIntJcV(obj)
@@ -75,6 +67,17 @@ classdef StateKinMBody < matlab.mixin.Copyable
             delete('mystica_stateKin.c')
         end
 
+        function tform_b = get_link_tform_b(obj,input)
+            arguments
+                obj
+                input.iLink (1,1) double
+                input.model mystica.model.Model
+                input.mBodyPosQuat_0 = obj.mBodyPosQuat_0
+            end
+            linkPosQuat_0 = input.mBodyPosQuat_0(input.model.linksAttributes{input.iLink}.selector.indexes_linkPosQuat_from_mBodyPosQuat);
+            tform_b = mystica.rbm.getTformGivenPosQuat(linkPosQuat_0);
+        end
+
         mBodyVelQuat    = get_mBodyVelQuat0_from_mBodyTwist0(obj,input);
         mBodyVelQuat    = get_mBodyVelQuat0_from_motorsAngVel(obj,input);
         mBodyTwist      = get_mBodyTwist0_from_motorsAngVel(obj,input)
@@ -84,9 +87,8 @@ classdef StateKinMBody < matlab.mixin.Copyable
     end
 
     methods (Access=protected)
-        getReferenceConversion(obj,model)
+        getKinematicQuantities(obj,model)
         getJacobianConstraints(obj,model)
-        updateLinkState(obj,model)
     end
 
 end

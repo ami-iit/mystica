@@ -30,8 +30,8 @@ function getJacobianConstraints(obj,model)
     for i = 1 : model.nJoint
         index = model.joints{i}.getJointConnectionDetails();
         
-        tform_0_p  = obj.linksState{index.parent}.csdFn.tform_0_b(obj.csdSy.mBodyPosQuat_0);
-        tform_0_c  = obj.linksState{index.child }.csdFn.tform_0_b(obj.csdSy.mBodyPosQuat_0);
+        tform_0_p  = obj.get_link_tform_b('iLink',index.parent,'model',model,'mBodyPosQuat_0',obj.csdSy.mBodyPosQuat_0);
+        tform_0_c  = obj.get_link_tform_b('iLink',index.child ,'model',model,'mBodyPosQuat_0',obj.csdSy.mBodyPosQuat_0);
         tform_p_pj = model.linksAttributes{index.parent}.tform_b_j{index.cPointParent};
         tform_c_cj = model.linksAttributes{index.child }.tform_b_j{index.cPointChild };
         
