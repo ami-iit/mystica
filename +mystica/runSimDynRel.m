@@ -59,7 +59,6 @@ function [data,stateDyn] = runSimDynRel(input)
     %% Saving Workspace
 
     clear ans k kVec motorsCurrent mBodyPosQuat_0 tout dataLiveStatistics
-    mystica.utils.deleteGeneratedMEX
 
     if stgs.saving.workspace.run
         if stgs.saving.workspace.clearCasadi
