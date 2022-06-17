@@ -36,7 +36,7 @@ function [mBodyVelAcc_0,varargout] = get_mBodyVelAcc0_from_motorsCurrent(obj,inp
             kiFeedbackJcV = input.kFeedbackJcV(2);
 
             mBodyTwist_0     = obj.mBodyPosVel_0(input.model.selector.indexes_mBodyTwist_from_mBodyPosVel);
-            mBodyVelQuat_0   = sparse(obj.csdFn.get_mBodyVelQuat0_from_mBodyTwist0(obj.mBodyPosQuat_0,mBodyTwist_0,input.kBaum));
+            mBodyVelQuat_0   = sparse(mystica_stateKin('get_mBodyVelQuat0_from_mBodyTwist0',obj.mBodyPosQuat_0,mBodyTwist_0,input.kBaum));
 
             Jc        = obj.Jc( obj.linIndRowJc,:);
             dJc       = sparse(obj.csdFn.dJc(obj.mBodyPosVel_0));
@@ -75,7 +75,7 @@ function [mBodyVelAcc_0,varargout] = get_mBodyVelAcc0_from_motorsCurrent(obj,inp
                 X = sol.value(obj.optiVar.X);
 
                 mBodyTwist_0     = obj.mBodyPosVel_0(input.model.selector.indexes_mBodyTwist_from_mBodyPosVel);
-                mBodyVelQuat_0   = sparse(obj.csdFn.get_mBodyVelQuat0_from_mBodyTwist0(obj.mBodyPosQuat_0,mBodyTwist_0,input.kBaum));
+                mBodyVelQuat_0   = sparse(mystica_stateKin('get_mBodyVelQuat0_from_mBodyTwist0',obj.mBodyPosQuat_0,mBodyTwist_0,input.kBaum));
 
                 mBodyTwAcc_0          = X(1:input.model.constants.mBodyTwist,1);
                 jointsWrenchConstr_PJ = X(input.model.constants.mBodyTwist+1:end,1);
