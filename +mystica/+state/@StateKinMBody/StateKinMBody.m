@@ -83,9 +83,9 @@ classdef StateKinMBody < matlab.mixin.Copyable
                 input.model mystica.model.Model
             end
             if input.casadiSym
-                mBodyPosQuat = obj.mBodyPosQuat_0;
-            else
                 mBodyPosQuat = obj.csdSy.mBodyPosQuat_0;
+            else
+                mBodyPosQuat = obj.mBodyPosQuat_0;
             end
             tform_b = mystica.rbm.getTformGivenPosQuat(mBodyPosQuat(input.model.linksAttributes{input.iLink}.selector.indexes_linkPosQuat_from_mBodyPosQuat));
         end
