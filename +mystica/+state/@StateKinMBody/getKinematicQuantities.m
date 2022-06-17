@@ -16,7 +16,7 @@ function getKinematicQuantities(obj,model)
         sel_angVel_c = model.linksAttributes{index.child }.selector.matrix_linkAngVel_from_mBodyTwist;
         sel_angVel_p = model.linksAttributes{index.parent}.selector.matrix_linkAngVel_from_mBodyTwist;
         
-        rotm_p_0  = transpose(mystica.rbm.getRotmGivenTform(obj.linksState{index.parent}.csdFn.tform_0_b(obj.csdSy.mBodyPosQuat_0)));
+        rotm_p_0  = transpose(mystica.rbm.getRotmGivenTform(obj.get_link_tform_b('iLink',index.parent,'model',model,'mBodyPosQuat_0',obj.csdSy.mBodyPosQuat_0)));
         rotm_pj_p = transpose(mystica.rbm.getRotmGivenTform(model.linksAttributes{index.parent}.tform_b_j{index.cPointParent}));
         
         rC_from_mBodyTwist0_2_jointsAngVelPJ{j}   = rotm_pj_p * rotm_p_0 * (sel_angVel_c - sel_angVel_p);

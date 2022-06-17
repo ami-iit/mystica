@@ -78,8 +78,8 @@ classdef Logger < matlab.mixin.Copyable
             
             for j = 1 : input.model.nJoint
                 index = input.model.joints{j}.getJointConnectionDetails;
-                rotm_0_p   = mystica.rbm.getRotmGivenTform(input.stateKinMBody.linksState{index.parent}.tform_0_b);
-                rotm_0_c   = mystica.rbm.getRotmGivenTform(input.stateKinMBody.linksState{index.child }.tform_0_b);
+                rotm_0_p   = mystica.rbm.getRotmGivenTform(input.stateKinMBody.get_link_tform_b('iLink',index.parent,'model',input.model));
+                rotm_0_c   = mystica.rbm.getRotmGivenTform(input.stateKinMBody.get_link_tform_b('iLink',index.child ,'model',input.model));
                 rotm_p_pj  = mystica.rbm.getRotmGivenTform(input.model.linksAttributes{index.parent}.tform_b_j{index.cPointParent});
                 rotm_c_cj  = mystica.rbm.getRotmGivenTform(input.model.linksAttributes{index.child }.tform_b_j{index.cPointChild });
                 rotm_pj_cj = rotm_p_pj'*rotm_0_p'*rotm_0_c*rotm_c_cj;
