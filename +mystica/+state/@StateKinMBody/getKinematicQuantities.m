@@ -1,5 +1,5 @@
-function getReferenceConversion(obj,model)
-    %GETREFERENCECONVERSION Summary of this function goes here
+function getKinematicQuantities(obj,model)
+    %getKinematicQuantities Summary of this function goes here
     %   Detailed explanation goes here
     arguments
         obj   mystica.state.StateKinMBody

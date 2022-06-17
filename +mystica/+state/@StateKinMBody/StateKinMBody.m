@@ -37,7 +37,7 @@ classdef StateKinMBody < matlab.mixin.Copyable
                 obj.linksState{i} = mystica.state.LinkState('csdMBodyPosQuat',obj.csdSy.mBodyPosQuat_0,'indexesLinkPosQuat',input.model.linksAttributes{i}.selector.indexes_linkPosQuat_from_mBodyPosQuat);
             end
             obj.getJacobianConstraints(input.model)
-            obj.getReferenceConversion(input.model)
+            obj.getKinematicQuantities(input.model)
             obj.nullEvaluator = mystica.utils.NullSpace(...
                 'decompositionMethod'   ,obj.stgs.nullSpace.decompositionMethod,...
                 'rankRevealingMethod'   ,obj.stgs.nullSpace.rankRevealingMethod,...
@@ -84,7 +84,7 @@ classdef StateKinMBody < matlab.mixin.Copyable
     end
 
     methods (Access=protected)
-        getReferenceConversion(obj,model)
+        getKinematicQuantities(obj,model)
         getJacobianConstraints(obj,model)
         updateLinkState(obj,model)
     end
