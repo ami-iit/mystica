@@ -75,6 +75,21 @@ classdef StateKinMBody < matlab.mixin.Copyable
             delete('mystica_stateKin.c')
         end
 
+        function tform_b = get_link_tform_b(obj,input)
+            arguments
+                obj
+                input.iLink (1,1) double
+                input.casadiSym logical = false
+                input.model mystica.model.Model
+            end
+            if input.casadiSym
+                mBodyPosQuat = obj.mBodyPosQuat_0;
+            else
+                mBodyPosQuat = obj.csdSy.mBodyPosQuat_0;
+            end
+            tform_b = mystica.rbm.getTformGivenPosQuat(mBodyPosQuat(input.model.linksAttributes{input.iLink}.selector.indexes_linkPosQuat_from_mBodyPosQuat));
+        end
+
         mBodyVelQuat    = get_mBodyVelQuat0_from_mBodyTwist0(obj,input);
         mBodyVelQuat    = get_mBodyVelQuat0_from_motorsAngVel(obj,input);
         mBodyTwist      = get_mBodyTwist0_from_motorsAngVel(obj,input)
