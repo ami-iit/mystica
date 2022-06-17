@@ -64,7 +64,7 @@ function getDynamicQuantities(obj,model,stgsIntegrator)
 
     for i = 1 : model.nLink
         mass            = model.linksAttributes{i}.mass;
-        rotm_0_b        = mystica.rbm.getRotmGivenTform(obj.linksState{i}.csdFn.tform_0_b(obj.csdSy.mBodyPosQuat_0));
+        rotm_0_b        = mystica.rbm.getRotmGivenTform(obj.get_link_tform_b('iLink',i,'model',model,'mBodyPosQuat_0',obj.csdSy.mBodyPosQuat_0));
         pos_b_g         = mystica.rbm.getPosGivenTform(model.linksAttributes{i}.tform_b_g);
         inertiaTens_0_b = rotm_0_b * model.linksAttributes{i}.inertiaTens_b_b * transpose(rotm_0_b);
         sel_twist       = model.linksAttributes{i}.selector.matrix_linkTwist_from_mBodyTwist;
