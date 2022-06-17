@@ -34,5 +34,5 @@ data = mystica.runSimKinRel('model',model,'stgs',stgs,'mBodyPosQuat_0',model.get
 % visualize data
 
 if stgs.visualizer.run
-    mystica.viz.visualizeKinRel('model',model,'data',data,'stgs',stgs)
+    mystica.viz.visualizeKinRel('model',model,'data',data,'stgs',stgs);
 end
