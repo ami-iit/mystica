@@ -42,7 +42,7 @@ classdef StateKinMBody < matlab.mixin.Copyable
                 'decompositionMethod'   ,obj.stgs.nullSpace.decompositionMethod,...
                 'rankRevealingMethod'   ,obj.stgs.nullSpace.rankRevealingMethod,...
                 'toleranceRankRevealing',obj.stgs.nullSpace.toleranceRankRevealing);
-            % generate cogenerate casadi funtions
+            % generate MEX file containing casadi funtions
             obj.generateMEX();
             % Evaluate initial state
             obj.setMBodyPosQuat('mBodyPosQuat_0',input.mBodyPosQuat_0,'model',input.model)
