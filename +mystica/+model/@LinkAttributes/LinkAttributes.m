@@ -15,7 +15,7 @@ classdef LinkAttributes
         visual
         selector
     end
-    properties (Access=protected)
+    properties (Access={?mystica.model.Model})
         tform_0_b
     end
     
