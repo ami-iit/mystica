@@ -15,6 +15,9 @@ classdef LinkAttributes
         visual
         selector
     end
+    properties (Access=protected)
+        tform_0_b
+    end
     
     methods
         function obj = LinkAttributes(input)
@@ -27,6 +30,7 @@ classdef LinkAttributes
                 input.mass
                 input.inertiaTens_g_g = []
                 input.inertiaTens_b_b = []
+                input.tform_0_b
                 input.tform_b_j
                 input.tform_b_g
                 input.fixed
@@ -40,6 +44,7 @@ classdef LinkAttributes
             obj.index            = input.index;
             obj.joints           = input.joints;
             obj.mass             = input.mass;
+            obj.tform_0_b        = input.tform_0_b;
             obj.tform_b_j        = input.tform_b_j;
             obj.tform_b_g        = input.tform_b_g;
             obj.fixed            = input.fixed;

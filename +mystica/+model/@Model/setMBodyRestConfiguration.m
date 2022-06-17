@@ -30,9 +30,9 @@ function setMBodyRestConfiguration(obj)
         tform_jCPknown_jCPunknown = obj.joints{indexJoint}.tform_pj0_cj0*(indexLinkParent==indexKnown) + ...
             mystica.rbm.getTformInv(obj.joints{indexJoint}.tform_pj0_cj0)*(indexLinkChild==indexKnown);
 
-        tform_0_bUnknown = obj.linksState{indexKnown}.tform_0_b * obj.linksAttributes{indexKnown}.tform_b_j{indexCPknown} * tform_jCPknown_jCPunknown * mystica.rbm.getTformInv(obj.linksAttributes{indexUnknown}.tform_b_j{indexCPunknown});
+        tform_0_bUnknown = obj.linksAttributes{indexKnown}.tform_0_b * obj.linksAttributes{indexKnown}.tform_b_j{indexCPknown} * tform_jCPknown_jCPunknown * mystica.rbm.getTformInv(obj.linksAttributes{indexUnknown}.tform_b_j{indexCPunknown});
 
-        obj.linksState{indexUnknown}.setLinkStateGivenLinkTform(tform_0_bUnknown);
+        obj.linksAttributes{indexUnknown}.tform_0_b = tform_0_bUnknown;
 
     end
 
