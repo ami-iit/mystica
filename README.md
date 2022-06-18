@@ -31,6 +31,7 @@ The _maximal_ representation consists of a set of _non-minimum_ variables 𝐪 c
 ## :hammer: Dependencies
 
 - [`matlab`](https://mathworks.com/)
+- a matlab [supported-compilers](https://mathworks.com/support/requirements/supported-compilers.html) for MEX-file compilation
 
 Other requisites are:
 

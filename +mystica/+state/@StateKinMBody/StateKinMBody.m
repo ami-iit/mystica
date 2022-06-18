@@ -55,16 +55,31 @@ classdef StateKinMBody < matlab.mixin.Copyable
         end
 
         function generateMEX(obj)
+            nameMEX = 'mystica_stateKin';
             opts = struct('main', true,'mex', true);
-            C = casadi.CodeGenerator('mystica_stateKin.c',opts);
+            initial_path = pwd;
+            cd(fullfile(mystica.utils.getMysticaFullPath,'deps','csdMEX'));
+            C = casadi.CodeGenerator([nameMEX,'.c'],opts);
             C.add(obj.csdFn.Jc);
             C.add(obj.csdFn.intJcV);
             C.add(obj.csdFn.rC_from_jointsAngVelPJ_2_jointsAngVel0);
             C.add(obj.csdFn.rC_from_mBodyTwist0_2_jointsAngVelPJ);
             C.add(obj.csdFn.get_mBodyVelQuat0_from_mBodyTwist0)
             C.generate();
-            mex mystica_stateKin.c -largeArrayDims
-            delete('mystica_stateKin.c')
+            fileID = fopen([nameMEX,'.c']    ,'r'); new_code = fscanf(fileID,'%s'); fclose(fileID);
+            if exist([nameMEX,'_old.c'],'file')
+                fileID = fopen([nameMEX,'_old.c'],'r'); old_code = fscanf(fileID,'%s'); fclose(fileID);
+            else
+                old_code = '';
+            end
+            if ~strcmp(new_code,old_code) || isempty(dir([nameMEX,'.mex*']))
+                fprintf('generating %s.mex\n',nameMEX)
+                mex([nameMEX,'.c'],'-largeArrayDims')
+            else
+                fprintf('%s.mex already exists\n',nameMEX)
+            end
+            movefile([nameMEX,'.c'],[nameMEX,'_old.c'])
+            cd(initial_path)
         end
 
         function tform_b = get_link_tform_b(obj,input)

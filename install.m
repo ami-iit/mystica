@@ -64,6 +64,15 @@ function install(input)
     system(sprintf('"%s" env config vars set MATLABPATH="%s" -p "%s"',mamba_full_path,matlab_path_env,env_full_path));
     fprintf('Installing mystica meshes folder completed\n')
 
+    %% Create csdMEX folder
+
+    fprintf('Installing mystica csdMEX folder\n')
+    mystica_csdMEX_fullpath = fullfile(mystica_fullpath,'deps','csdMEX');
+    mkdir(mystica_csdMEX_fullpath)
+    matlab_path_env = strcat( mystica_csdMEX_fullpath , env_sep , matlab_path_env );
+    system(sprintf('"%s" env config vars set MATLABPATH="%s" -p "%s"',mamba_full_path,matlab_path_env,env_full_path));
+    fprintf('Installing mystica meshes folder completed\n')
+
     %% Creation of setup.m
 
     fprintf('Creating setup script in %s\n', setup_script);
@@ -80,6 +89,7 @@ function install(input)
     fprintf(setupID,'install_prefix          = "%s";\n', install_prefix);
     fprintf(setupID,'mystica_fullpath        = "%s";\n', mystica_fullpath);
     fprintf(setupID,'mystica_meshes_fullpath = "%s";\n', mystica_meshes_fullpath);
+    fprintf(setupID,'mystica_csdMEX_fullpath = "%s";\n', mystica_csdMEX_fullpath);
     fprintf(setupID,'\n');
     fprintf(setupID,'%% AddPath packages installed with conda\n');
     fprintf(setupID,'addpath(fullfile(pckgs_install_prefix,"mex"));\n');
@@ -92,6 +102,9 @@ function install(input)
     fprintf(setupID,'\n');
     fprintf(setupID,'%% AddPath mystica meshes\n');
     fprintf(setupID,'addpath(mystica_meshes_fullpath);\n');
+    fprintf(setupID,'\n');
+    fprintf(setupID,'%% AddPath mystica csdMEX\n');
+    fprintf(setupID,'addpath(mystica_csdMEX_fullpath);\n');
     fprintf(setupID,'\n');
     fprintf(setupID,'%% Add to the env:"PATH" the directory with the packages installed with conda\n');
     fprintf(setupID,'setenv("PATH",strcat(fullfile(pckgs_install_prefix,"bin"), env_sep, getenv("PATH")));\n');
