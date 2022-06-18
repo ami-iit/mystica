@@ -101,8 +101,8 @@ function getDynamicQuantities(obj,model,stgsIntegrator)
     massMatrix = massMatrixWithoutMotorInertia + massMatrixMotorInertia;
 
     obj.csdFn.dJc                    = casadi.Function('dJc',{obj.csdSy.mBodyPosVel_0 },{obj.csdSy.dJc});
-    obj.csdFn.massMatrix             = casadi.Function('M',{  obj.csdSy.mBodyPosQuat_0},{massMatrix});
-    obj.csdFn.massMatrixMotorInertia = casadi.Function('Mmi',{obj.csdSy.mBodyPosQuat_0},{massMatrixMotorInertia});
+    obj.csdFn.massMatrix             = casadi.Function('massMatrix',{  obj.csdSy.mBodyPosQuat_0},{massMatrix});
+    obj.csdFn.massMatrixMotorInertia = casadi.Function('massMatrixMotorInertia',{obj.csdSy.mBodyPosQuat_0},{massMatrixMotorInertia});
 
     %% mBodyWrenchExt_0, mBodyWrenchCor_0, mBodyWrenchGra_0, mBodyWrenchFri_0, mBodyWrenchInp_0
 
@@ -121,8 +121,11 @@ function getDynamicQuantities(obj,model,stgsIntegrator)
 
     wrenchTotal = -wrenchGravity-wrenchCoriolis+wrenchFriction+wrenchCurrent;
 
-    obj.csdFn.mBodyWrenchExt_0 = casadi.Function('wE',{ obj.csdSy.mBodyPosVel_0,obj.csdSy.motorsCurrent},{wrenchTotal});
-    obj.csdFn.mBodyWrenchGra_0 = casadi.Function('wEg',{obj.csdSy.mBodyPosQuat_0},{wrenchGravity});
+    obj.csdFn.mBodyWrenchExt_0 = casadi.Function('mBodyWrenchExt_0',{obj.csdSy.mBodyPosVel_0,obj.csdSy.motorsCurrent},{wrenchTotal},{'mBodyPosVel_0','motorsCurrent'},{'mBodyWrenchExt_0'});
+    obj.csdFn.mBodyWrenchGra_0 = casadi.Function('mBodyWrenchGra_0',{obj.csdSy.mBodyPosQuat_0},{wrenchGravity},{'mBodyPosQuat_0'},{'mBodyWrenchGra_0'});
+    obj.csdFn.mBodyWrenchCor_0 = casadi.Function('mBodyWrenchCor_0',{obj.csdSy.mBodyPosVel_0},{wrenchCoriolis},{'mBodyPosVel_0'},{'mBodyWrenchCor_0'});
+    obj.csdFn.mBodyWrenchFri_0 = casadi.Function('mBodyWrenchFri_0',{obj.csdSy.mBodyPosVel_0},{wrenchFriction},{'mBodyPosVel_0'},{'mBodyWrenchFri_0'});
+    obj.csdFn.mBodyWrenchInp_0 = casadi.Function('mBodyWrenchInp_0',{obj.csdSy.mBodyPosQuat_0,obj.csdSy.motorsCurrent},{wrenchCurrent},{'mBodyPosQuat_0','motorsCurrent'},{'mBodyWrenchInp_0'});
 
     obj.csdFn.mBodyWrench_0    = casadi.Function('mBodyWrench_0',...
         {obj.csdSy.mBodyPosVel_0,obj.csdSy.motorsCurrent},...                       %input
@@ -130,7 +133,7 @@ function getDynamicQuantities(obj,model,stgsIntegrator)
         {'mBodyPosVel_0','motorsCurrent'},...                                       %label input
         {'ext','coriolis','gravity','friction','input'});                           %label output
 
-    obj.csdFn.from_motorsCurrent_2_mBodyWrenchCur = casadi.Function('B',{obj.csdSy.mBodyPosQuat_0},{B * rC_0_PJ * sel_wAct' * Ki});
+    obj.csdFn.from_motorsCurrent_2_mBodyWrenchInp0 = casadi.Function('from_motorsCurrent_2_mBodyWrenchInp0',{obj.csdSy.mBodyPosQuat_0},{B * rC_0_PJ * sel_wAct' * Ki});
 
     %% mBodyVelAcc0
 

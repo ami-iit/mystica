@@ -37,13 +37,13 @@ function [mBodyVelAcc_0,varargout] = get_mBodyVelAcc0_from_motorsCurrent(obj,inp
             mBodyVelQuat_0   = sparse(mystica_stateKin('get_mBodyVelQuat0_from_mBodyTwist0',obj.mBodyPosQuat_0,mBodyTwist_0,input.kBaum));
 
             Jc        = obj.Jc( obj.linIndRowJc,:);
-            dJc       = sparse(obj.csdFn.dJc(obj.mBodyPosVel_0));
+            dJc       = sparse(mystica_stateDyn('dJc',obj.mBodyPosVel_0));
             dJc       = dJc(obj.linIndRowJc,:);
             intJcV    = obj.getIntJcV;
             intJcV    = intJcV( obj.linIndRowJc,:);
             V         = mBodyTwist_0;
-            M         = sparse(obj.csdFn.massMatrix(obj.mBodyPosQuat_0));                             % massMatrix            -> M
-            W         = sparse(obj.csdFn.mBodyWrenchExt_0(obj.mBodyPosVel_0,input.motorsCurrent));    % mBodyWrenchExt_0      -> W
+            M         = sparse(mystica_stateDyn('massMatrix',obj.mBodyPosQuat_0));                             % massMatrix            -> M
+            W         = sparse(mystica_stateDyn('mBodyWrenchExt_0',obj.mBodyPosVel_0,input.motorsCurrent));    % mBodyWrenchExt_0      -> W
             invMJcT   = mystica.utils.scaling(M)*((M*mystica.utils.scaling(M))\Jc');
             invMW     = mystica.utils.scaling(M)*((M*mystica.utils.scaling(M))\W);
             JcInvMJcT = Jc*invMJcT;

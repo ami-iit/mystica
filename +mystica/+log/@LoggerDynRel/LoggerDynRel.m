@@ -86,11 +86,11 @@ classdef LoggerDynRel < mystica.log.Logger
 
             mBodyWrench_0 = input.stateDynMBody.csdFn.mBodyWrench_0('mBodyPosVel_0',input.stateDynMBody.mBodyPosVel_0,'motorsCurrent',input.motorsCurrent);
 
-            obj.mBodyWrenchExt_0(:,obj.indexIteration) = full(mBodyWrench_0.ext);
-            obj.mBodyWrenchGra_0(:,obj.indexIteration) = full(mBodyWrench_0.gravity);
-            obj.mBodyWrenchCor_0(:,obj.indexIteration) = full(mBodyWrench_0.coriolis);
-            obj.mBodyWrenchFri_0(:,obj.indexIteration) = full(mBodyWrench_0.friction);
-            obj.mBodyWrenchInp_0(:,obj.indexIteration) = full(mBodyWrench_0.input);
+            obj.mBodyWrenchExt_0(:,obj.indexIteration) = full(mystica_stateDyn('mBodyWrenchExt_0',input.stateDynMBody.mBodyPosVel_0,input.motorsCurrent));
+            obj.mBodyWrenchGra_0(:,obj.indexIteration) = full(mystica_stateDyn('mBodyWrenchGra_0',input.stateDynMBody.mBodyPosQuat_0));
+            obj.mBodyWrenchCor_0(:,obj.indexIteration) = full(mystica_stateDyn('mBodyWrenchCor_0',input.stateDynMBody.mBodyPosVel_0));
+            obj.mBodyWrenchFri_0(:,obj.indexIteration) = full(mystica_stateDyn('mBodyWrenchFri_0',input.stateDynMBody.mBodyPosVel_0));
+            obj.mBodyWrenchInp_0(:,obj.indexIteration) = full(mystica_stateDyn('mBodyWrenchInp_0',input.stateDynMBody.mBodyPosQuat_0,input.motorsCurrent));
             % mBodyWrenchJcF_0 = Jc' F
             obj.mBodyWrenchJcF_0(:,obj.indexIteration) = input.stateDynMBody.Jc'*jointsWrenchConstr;
 

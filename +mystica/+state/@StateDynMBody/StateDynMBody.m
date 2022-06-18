@@ -29,6 +29,9 @@ classdef StateDynMBody < mystica.state.StateKinMBody
             obj.csdSy.mBodyPosVel_0  = casadi.SX.sym('chi',input.model.constants.mBodyPosVel,1);
 
             obj.getDynamicQuantities(input.model,input.stgsIntegrator);
+            % generate MEX file containing (dyn) casadi funtions
+            obj.generateMEX_dyn();
+            % Evaluate initial state
             obj.setMBodyPosVel('mBodyPosVel_0',[input.mBodyPosQuat_0;input.mBodyTwist_0],'model',input.model)
 
         end
@@ -47,8 +50,47 @@ classdef StateDynMBody < mystica.state.StateKinMBody
 
         end
 
+        function generateMEX(obj)
+            obj.generateMEX@mystica.state.StateKinMBody();
+            obj.generateMEX_dyn();
+        end
+
     end
     methods (Access=protected)
         getDynamicQuantities(obj,model,stgsIntegrator)
+    end
+    methods (Access=private)
+        function generateMEX_dyn(obj)
+            nameMEX = 'mystica_stateDyn';
+            opts = struct('main', true,'mex', true);
+            initial_path = pwd;
+            cd(fullfile(mystica.utils.getMysticaFullPath,'deps','csdMEX'));
+            C = casadi.CodeGenerator([nameMEX,'.c'],opts);
+            C.add(obj.csdFn.dJc);
+            C.add(obj.csdFn.massMatrix);
+            C.add(obj.csdFn.massMatrixMotorInertia);
+            C.add(obj.csdFn.mBodyWrenchExt_0);
+            C.add(obj.csdFn.mBodyWrenchGra_0);
+            C.add(obj.csdFn.mBodyWrenchCor_0);
+            C.add(obj.csdFn.mBodyWrenchFri_0);
+            C.add(obj.csdFn.mBodyWrenchInp_0);
+            C.add(obj.csdFn.from_motorsCurrent_2_mBodyWrenchInp0);
+            %C.add(obj.csdFn.mBodyVelAcc_0); osqp cannot be code-generated
+            C.generate();
+            fileID = fopen([nameMEX,'.c']    ,'r'); new_code = fscanf(fileID,'%s'); fclose(fileID);
+            if exist([nameMEX,'_old.c'],'file')
+                fileID = fopen([nameMEX,'_old.c'],'r'); old_code = fscanf(fileID,'%s'); fclose(fileID);
+            else
+                old_code = '';
+            end
+            if ~strcmp(new_code,old_code) || isempty(dir([nameMEX,'.mex*']))
+                fprintf('generating %s.mex\n',nameMEX)
+                mex([nameMEX,'.c'],'-largeArrayDims')
+            else
+                fprintf('%s.mex already exists\n',nameMEX)
+            end
+            movefile([nameMEX,'.c'],[nameMEX,'_old.c'])
+            cd(initial_path)
+        end
     end
 end
