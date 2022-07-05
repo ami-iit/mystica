@@ -87,7 +87,7 @@ classdef Integrator < handle
             if isempty(obj.statusTracker) == 0
                 if obj.ratioTimePrintMax < floor(obj.tf*obj.statusTracker.workspacePrint.frameRate) && obj.statusTracker.workspacePrint.run
                     obj.ratioTimePrintMax = floor(obj.tf*obj.statusTracker.workspacePrint.frameRate);
-                    fprintf('Integration Time: %.1f/%.0f\n',obj.tf,obj.statusTracker.limitMaximumTime);
+                    fprintf('Integration Time: %.2f/%.0f\n',obj.tf,obj.statusTracker.limitMaximumTime);
                 end
             end
         end

@@ -83,9 +83,6 @@ classdef LoggerDynRel < mystica.log.Logger
             % massMatrix mBodyTwAcc_0 = mBodyWrenchExt + mBodyWrenchJcF_0
             %
             % mBodyWrenchExt = - wrenchGravity - wrenchCoriolis + wrenchFriction + wrenchInput
-
-            mBodyWrench_0 = input.stateDynMBody.csdFn.mBodyWrench_0('mBodyPosVel_0',input.stateDynMBody.mBodyPosVel_0,'motorsCurrent',input.motorsCurrent);
-
             obj.mBodyWrenchExt_0(:,obj.indexIteration) = full(mystica_stateDyn('mBodyWrenchExt_0',input.stateDynMBody.mBodyPosVel_0,input.motorsCurrent));
             obj.mBodyWrenchGra_0(:,obj.indexIteration) = full(mystica_stateDyn('mBodyWrenchGra_0',input.stateDynMBody.mBodyPosQuat_0));
             obj.mBodyWrenchCor_0(:,obj.indexIteration) = full(mystica_stateDyn('mBodyWrenchCor_0',input.stateDynMBody.mBodyPosVel_0));

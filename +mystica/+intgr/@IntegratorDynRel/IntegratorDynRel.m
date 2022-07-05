@@ -74,8 +74,7 @@ classdef IntegratorDynRel < mystica.intgr.Integrator
             xf = obj.integrate@mystica.intgr.Integrator('dxdt',dxdt,'xi',obj.mBodyPosVel_0,'ti',obj.ti,'tf',obj.tf);
 
             if obj.dxdtOpts.assumeConstant == 0
-                % because the stateDynMBody (handle class) is updated
-                % inside the method get_mBodyVelAcc0_from_motorsCurrent
+                % because the stateDynMBody (handle class) is updated inside the method get_mBodyVelAcc0_from_motorsCurrent
                 input.stateDynMBody.setMBodyPosVel( 'model',input.model,'mBodyPosVel_0' ,obj.mBodyPosVel_0)
             end
 
