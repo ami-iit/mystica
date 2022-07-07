@@ -24,7 +24,15 @@ function stgs = getDefaultSettingsSimDynRel(model,input)
     stgs.saving.workspace.name = ['dynRel_',model.name,'_',strTime,'.mat'];
     stgs.saving.workspace.clearCasadi = 0;
 
-    %% StateKin Settings
+    %% model Settings
+
+    stgs.model.friction.viscous.apply = 1;
+    stgs.model.friction.coulomb.apply = 1;
+    stgs.model.friction.coulomb.smoothSign.method         = 'sigmoid';
+    stgs.model.friction.coulomb.smoothSign.settlingTime   = 5*pi/180; %[rad]
+    stgs.model.friction.coulomb.smoothSign.toleranceBands = 0.02;     %[0...1]
+
+    %% StateDyn Settings
 
     stgs.stateDyn.nullSpace.decompositionMethod    = 'qrFull';
     stgs.stateDyn.nullSpace.rankRevealingMethod    = 'limitErrorNullSpace';

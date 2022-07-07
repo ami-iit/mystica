@@ -1,4 +1,4 @@
-function getDynamicQuantities(obj,model,stgsIntegrator)
+function getDynamicQuantities(obj,model,stgsIntegrator,stgsModel)
 
     %% Compute Casadi Symbolic Variables
 
@@ -35,7 +35,9 @@ function getDynamicQuantities(obj,model,stgsIntegrator)
             Kv    = model.joints{j}.coefficients.viscousFriction(indexTemp,indexTemp);
             Jm    = model.joints{j}.inertiaTensMotorRot_j_g(indexTemp,indexTemp);
             % friction actuated axis of rotation
-            frictionActAngVel{j} = - (Kv * gamma.^2 * eff * actAxesAngVelPJ + Kc * gamma * eff * sign(actAxesAngVelPJ));
+            viscousFriction = - Kv * gamma.^2 * eff * actAxesAngVelPJ;
+            coulombFriction = - Kc * gamma * eff * mystica.utils.smoothSign(actAxesAngVelPJ,'method',stgsModel.friction.coulomb.smoothSign.method,'settlingTime',stgsModel.friction.coulomb.smoothSign.settlingTime,'toleranceBands',stgsModel.friction.coulomb.smoothSign.toleranceBands);
+            frictionActAngVel{j} = viscousFriction*stgsModel.friction.viscous.apply + coulombFriction*stgsModel.friction.coulomb.apply;
             Ki{j}  = eff * gamma * Kt;
             Kdw{j} = Jm * gamma.^2 * eff;
         end
@@ -45,7 +47,9 @@ function getDynamicQuantities(obj,model,stgsIntegrator)
             Kc    = model.joints{j}.coefficients.coulombFriction(indexTemp,indexTemp);
             Kv    = model.joints{j}.coefficients.viscousFriction(indexTemp,indexTemp);
             % friction passive axis of rotation (actuated joints + passive joints)
-            frictionPasAngVel{j} = - (Kv * pasAxesAngVelPJ + Kc * sign(pasAxesAngVelPJ));
+            viscousFriction = - Kv * pasAxesAngVelPJ;
+            coulombFriction = - Kc * mystica.utils.smoothSign(pasAxesAngVelPJ,'method',stgsModel.friction.coulomb.smoothSign.method,'settlingTime',stgsModel.friction.coulomb.smoothSign.settlingTime,'toleranceBands',stgsModel.friction.coulomb.smoothSign.toleranceBands);
+            frictionPasAngVel{j} = viscousFriction*stgsModel.friction.viscous.apply + coulombFriction*stgsModel.friction.coulomb.apply;
         end
     end
 
