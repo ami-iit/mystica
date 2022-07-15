@@ -48,7 +48,8 @@ classdef IntegratorDynRel < mystica.intgr.Integrator
                     else
                         dxdt = casadi.Function('dxdt',{x},{input.stateDynMBody.csdFn.mBodyVelAcc_0(x,obj.motorsCurrent)});
                     end
-                case {'ode45','ode23','ode113','ode78','ode89','ode15s','ode23s','ode23t','ode23tb','ode15i'} %https://it.mathworks.com/help/matlab/math/choose-an-ode-solver.html
+                case {'ode45','ode23','ode113','ode78','ode89','ode15s','ode23s','ode23t','ode23tb','ode15i',... %https://it.mathworks.com/help/matlab/math/choose-an-ode-solver.html
+                        'mystica.intgr.ode1','mystica.intgr.ode2','mystica.intgr.ode4'} 
                     if obj.dxdtOpts.assumeConstant
                         obj.mBodyVelAcc_0 = input.stateDynMBody.get_mBodyVelAcc0_from_motorsCurrent(...
                             'motorsCurrent',obj.motorsCurrent,...

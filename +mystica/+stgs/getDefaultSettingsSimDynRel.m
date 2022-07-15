@@ -43,9 +43,10 @@ function stgs = getDefaultSettingsSimDynRel(model,input)
     stgs.integrator.maxTimeStep      = 1e-2;
     stgs.integrator.limitMaximumTime = input.stgs_integrator_limitMaximumTime;
 
-    stgs.integrator.solverOpts.name   = 'ode45';
-    stgs.integrator.solverOpts.RelTol = 1e-3;
-    stgs.integrator.solverOpts.AbsTol = 1e-6;
+    stgs.integrator.solverOpts.name    = 'ode45';
+    stgs.integrator.solverOpts.RelTol  = 1e-3;
+    stgs.integrator.solverOpts.AbsTol  = 1e-6;
+    stgs.integrator.solverOpts.MaxStep = [];
 
     stgs.integrator.dxdtOpts.assumeConstant  = 0;
     stgs.integrator.dxdtOpts.solverTechnique = 'inv'; %used only in case of ode. possible values: 'inv'(inverse)/'opt'(optimization problem, see https://github.com/ami-iit/element_morphing-cover-design/pull/197)
