@@ -1,10 +1,12 @@
-function [data,stateKin] = runSimKinRel(input)
+function [data,stateKin,stats] = runSimKinRel(input)
     arguments
         input.stgs                 struct
         input.model                mystica.model.Model
         input.mBodyPosQuat_0 (:,1) double
         input.nameControllerClass  char
     end
+
+    mp = mystica.utils.MeasurePerformance();
 
     stgs            = input.stgs;
     model           = input.model;
@@ -59,9 +61,11 @@ function [data,stateKin] = runSimKinRel(input)
         stateKinNoise = noise.applyEstimationError('model',model,'stateKinMBody',stateKin);
     end
 
+    stats = mp.getPerformance();
+
     %% Saving Workspace
 
-    clear ans k kVec motorsAngVel motorsAngVelNoise mBodyPosQuat_0 tout dataLiveStatistics
+    clear ans k kVec motorsAngVel motorsAngVelNoise mBodyPosQuat_0 tout mp
 
     if stgs.saving.workspace.run
         if stgs.saving.workspace.clearCasadi

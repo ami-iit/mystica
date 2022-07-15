@@ -1,10 +1,12 @@
-function [data,stateDyn] = runSimDynRel(input)
+function [data,stateDyn,stats] = runSimDynRel(input)
     arguments
         input.stgs                 struct
         input.model                mystica.model.Model
         input.mBodyPosQuat_0 (:,1) double
         input.nameControllerClass  char
     end
+
+    mp = mystica.utils.MeasurePerformance();
 
     stgs            = input.stgs;
     model           = input.model;
@@ -55,9 +57,11 @@ function [data,stateDyn] = runSimDynRel(input)
         stateDyn.setMBodyPosVel('mBodyPosVel_0',mBodyPosVel_0,'model',model);
     end
 
+    stats = mp.getPerformance();
+
     %% Saving Workspace
 
-    clear ans k kVec motorsCurrent mBodyPosQuat_0 tout dataLiveStatistics
+    clear ans k kVec motorsCurrent mBodyPosQuat_0 tout mp
 
     if stgs.saving.workspace.run
         if stgs.saving.workspace.clearCasadi
