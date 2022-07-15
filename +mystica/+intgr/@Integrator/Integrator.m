@@ -57,7 +57,7 @@ classdef Integrator < handle
                     obj.xf      = full(r.xf);
                 case 'function_handle'
                     opts = odeset;
-                    list = {'AbsTol','RelTol'};
+                    list = {'AbsTol','RelTol','MaxStep'};
                     for i = 1 : length(list)
                         opts.(list{i}) = obj.getfield(obj.solverOpts,list{i});
                     end
