@@ -145,19 +145,22 @@ function getDynamicQuantities(obj,model,stgsIntegrator,stgsModel)
     kiFeedbackJcV = stgsIntegrator.dxdtParam.feedbackJacobianConstraintsV(2);
 
     switch stgsIntegrator.dxdtOpts.optOpts.name
+        case 'qpoases'
+            opti = casadi.Opti('conic');
+            p_opts = struct('expand',true,'error_on_fail',false,'printLevel','none');
+            s_opts = struct();
         case 'osqp'
             opti = casadi.Opti('conic');
             p_opts = struct('expand',true,'error_on_fail',false);
-            s_opts = struct();
-            opti.solver(stgsIntegrator.dxdtOpts.optOpts.name,p_opts,s_opts);
+            s_opts = struct('adaptive_rho',1);
         case 'ipopt'
             opti = casadi.Opti();
             p_opts = struct('expand',true,'error_on_fail',false,'print_time',false);
             s_opts = struct('print_level',0);
-            opti.solver(stgsIntegrator.dxdtOpts.optOpts.name,p_opts,s_opts);
         otherwise
             error('solver not valid')
     end
+    opti.solver(stgsIntegrator.dxdtOpts.optOpts.name,p_opts,s_opts);
 
     % scaling opti variable
     k_dV = ones(model.constants.mBodyTwist,1);
@@ -168,9 +171,12 @@ function getDynamicQuantities(obj,model,stgsIntegrator,stgsModel)
     k_f = ones(model.constants.nConstraints,1);
     k_f(model.selector.indexes_constrainedAngVel_from_JcV) = (model.linksAttributes{1}.mass*model.linksAttributes{1}.linkDimension^2);
     k_f(model.selector.indexes_constrainedLinVel_from_JcV) = (model.linksAttributes{1}.mass*model.linksAttributes{1}.linkDimension);
+    k_f  = diag(k_f);
+    k_dV = diag(k_dV);
+
     % Variable definitions
-    dV            = opti.variable(model.constants.mBodyTwist  ,1).*k_dV; % mBodyTwAcc_0 -> dV
-    f             = opti.variable(model.constants.nConstraints,1).*k_f;  % jointsWrenchConstr_pj -> f
+    dV            = k_dV*opti.variable(model.constants.mBodyTwist ,1); % mBodyTwAcc_0 -> dV
+    f             = k_f*opti.variable(model.constants.nConstraints,1);  % jointsWrenchConstr_pj -> f
     x             = [dV;f];
     mBodyPosVel   = opti.parameter(model.constants.mBodyPosVel ,1);
     motorsCurrent = opti.parameter(model.constants.motorsAngVel,1);
@@ -184,9 +190,10 @@ function getDynamicQuantities(obj,model,stgsIntegrator,stgsModel)
     intJcV = obj.csdFn.intJcV(mBodyPosQuat,obj.mBodyPosQuat_0_initial);
     % Cost Function & Constraint
     E = (Jc*dV+dJc*V)+(kpFeedbackJcV*Jc*V)+(kiFeedbackJcV*intJcV);
+    D = M*dV-W-Jc'*f;
     opti.minimize(E'*E);
-    opti.subject_to(M*dV==W+Jc'*f);
-%    opti.subject_to(E==0);
+    opti.subject_to(D==0);
+    opti.subject_to(E==0);
     optFun = opti.to_function('mBodyVelAcc',{mBodyPosVel,motorsCurrent},{x});
     %
     X                     = optFun(mBodyPosVel,motorsCurrent);
