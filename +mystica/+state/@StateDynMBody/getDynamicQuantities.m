@@ -147,7 +147,7 @@ function getDynamicQuantities(obj,model,stgsIntegrator,stgsModel)
     switch stgsIntegrator.dxdtOpts.optOpts.name
         case 'qpoases'
             opti = casadi.Opti('conic');
-            p_opts = struct('expand',true,'error_on_fail',false,'printLevel','none');
+            p_opts = struct('expand',true,'error_on_fail',false,'printLevel','none','enableFullLITests',true,'enableCholeskyRefactorisation',1,'numRefinementSteps',3);
             s_opts = struct();
         case 'osqp'
             opti = casadi.Opti('conic');
