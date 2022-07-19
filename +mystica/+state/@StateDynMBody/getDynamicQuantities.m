@@ -191,8 +191,9 @@ function getDynamicQuantities(obj,model,stgsIntegrator,stgsModel)
     % Cost Function & Constraint
     E = (Jc*dV+dJc*V)+(kpFeedbackJcV*Jc*V)+(kiFeedbackJcV*intJcV);
     D = M*dV-W-Jc'*f;
-    opti.minimize(E'*E);
+    opti.minimize(f'*f+dV'*dV);
     opti.subject_to(D==0);
+    opti.subject_to(((Jc*V)'*(Jc*dV+dJc*V)) < 0);
     optFun = opti.to_function('mBodyVelAcc',{mBodyPosVel,motorsCurrent},{x});
     %
     X                     = optFun(mBodyPosVel,motorsCurrent);
