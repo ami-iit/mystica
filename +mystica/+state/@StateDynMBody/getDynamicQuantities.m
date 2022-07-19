@@ -177,7 +177,6 @@ function getDynamicQuantities(obj,model,stgsIntegrator,stgsModel)
     % Variable definitions
     dV            = k_dV*opti.variable(model.constants.mBodyTwist ,1); % mBodyTwAcc_0 -> dV
     f             = k_f*opti.variable(model.constants.nConstraints,1);  % jointsWrenchConstr_pj -> f
-    e             = opti.variable(model.constants.nConstraints,1);  % jointsWrenchConstr_pj -> f
     x             = [dV;f];
     mBodyPosVel   = opti.parameter(model.constants.mBodyPosVel ,1);
     motorsCurrent = opti.parameter(model.constants.motorsAngVel,1);
@@ -192,9 +191,8 @@ function getDynamicQuantities(obj,model,stgsIntegrator,stgsModel)
     % Cost Function & Constraint
     E = (Jc*dV+dJc*V)+(kpFeedbackJcV*Jc*V)+(kiFeedbackJcV*intJcV);
     D = M*dV-W-Jc'*f;
-    opti.minimize(e'*e);
+    opti.minimize(E'*E);
     opti.subject_to(D==0);
-    opti.subject_to(E+e==0);
     optFun = opti.to_function('mBodyVelAcc',{mBodyPosVel,motorsCurrent},{x});
     %
     X                     = optFun(mBodyPosVel,motorsCurrent);
