@@ -29,7 +29,7 @@ classdef StateDynMBody < mystica.state.StateKinMBody
             obj.csdSy.motorsCurrent  = casadi.SX.sym('I',input.model.constants.motorsAngVel,1);
             obj.csdSy.mBodyPosVel_0  = casadi.SX.sym('chi',input.model.constants.mBodyPosVel,1);
 
-            obj.getDynamicQuantities(input.model,input.stgsIntegrator,input.stgsModel);
+            obj.getDynamicQuantities(input.model,input.stgsIntegrator,input.stgsModel,input.mBodyPosQuat_0);
             % generate MEX file containing (dyn) casadi funtions
             obj.generateMEX_dyn();
             % Evaluate initial state
@@ -58,7 +58,7 @@ classdef StateDynMBody < mystica.state.StateKinMBody
 
     end
     methods (Access=protected)
-        getDynamicQuantities(obj,model,stgsIntegrator,stgsModel)
+        getDynamicQuantities(obj,model,stgsIntegrator,stgsModel,mBodyPosQuat_initial)
     end
     methods (Access=private)
         function generateMEX_dyn(obj)

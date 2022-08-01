@@ -1,4 +1,4 @@
-function getDynamicQuantities(obj,model,stgsIntegrator,stgsModel)
+function getDynamicQuantities(obj,model,stgsIntegrator,stgsModel,mBodyPosQuat_initial)
 
     %% Compute Casadi Symbolic Variables
 
@@ -163,16 +163,25 @@ function getDynamicQuantities(obj,model,stgsIntegrator,stgsModel)
     opti.solver(stgsIntegrator.dxdtOpts.optOpts.name,p_opts,s_opts);
 
     % scaling opti variable
-    k_dV = ones(model.constants.mBodyTwist,1);
-    for i = 1 : model.nLink
-        k_dV(model.linksAttributes{i}.selector.indexes_linkLinVel_from_mBodyTwist) = (model.linksAttributes{i}.linkDimension);
-        k_dV(model.linksAttributes{i}.selector.indexes_linkAngVel_from_mBodyTwist) = 1;
+    switch '3'
+        case '1'
+            k_dV = ones(model.constants.mBodyTwist,1);
+            for i = 1 : model.nLink
+                k_dV(model.linksAttributes{i}.selector.indexes_linkLinVel_from_mBodyTwist) = (model.linksAttributes{i}.linkDimension);
+                k_dV(model.linksAttributes{i}.selector.indexes_linkAngVel_from_mBodyTwist) = 1;
+            end
+            k_f = ones(model.constants.nConstraints,1);
+            k_f(model.selector.indexes_constrainedAngVel_from_JcV) = (model.linksAttributes{1}.mass*model.linksAttributes{1}.linkDimension^2);
+            k_f(model.selector.indexes_constrainedLinVel_from_JcV) = (model.linksAttributes{1}.mass*model.linksAttributes{1}.linkDimension);
+            k_f  = diag(k_f);
+            k_dV = diag(k_dV);
+        case '2'
+            k_dV = mystica.utils.scaling(mystica_stateDyn('massMatrix',mBodyPosQuat_initial));
+            k_f  = mystica.utils.scaling(mystica_stateKin('Jc',mBodyPosQuat_initial)');
+        case '3'
+            k_dV = mystica.utils.scaling([mystica_stateDyn('massMatrix',mBodyPosQuat_initial); mystica_stateKin('Jc',mBodyPosQuat_initial)]);
+            k_f  = mystica.utils.scaling(mystica_stateKin('Jc',mBodyPosQuat_initial)');
     end
-    k_f = ones(model.constants.nConstraints,1);
-    k_f(model.selector.indexes_constrainedAngVel_from_JcV) = (model.linksAttributes{1}.mass*model.linksAttributes{1}.linkDimension^2);
-    k_f(model.selector.indexes_constrainedLinVel_from_JcV) = (model.linksAttributes{1}.mass*model.linksAttributes{1}.linkDimension);
-    k_f  = diag(k_f);
-    k_dV = diag(k_dV);
 
     % Variable definitions
     dV            = k_dV*opti.variable(model.constants.mBodyTwist ,1); % mBodyTwAcc_0 -> dV
