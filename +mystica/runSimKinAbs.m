@@ -1,10 +1,12 @@
-function [data,stateKin] = runSimKinAbs(input)
+function [data,stateKin,stats] = runSimKinAbs(input)
     arguments
         input.stgs                 struct
         input.model                mystica.model.Model
         input.mBodyPosQuat_0 (:,1) double
         input.nameControllerClass  char
     end
+
+    mp = mystica.utils.MeasurePerformance();
 
     stgs            = input.stgs;
     model           = input.model;
@@ -40,7 +42,7 @@ function [data,stateKin] = runSimKinAbs(input)
 
     for k = kVec
         % Controller
-        mBodyTwist_0 = contr.solve('time',tout(k),'stateKinMBody',stateKin,'model',model);
+        mBodyTwist_0 = contr.solve('time',tout(k),'stateKinMBody',stateKin,'model',model) * stgs.controller.applyControlInput;
         % Integrator
         mBodyPosQuat_0 = intgr.integrate('stateKinMBody',stateKin,'mBodyTwist_0',mBodyTwist_0,'model',model);
         % Logger
@@ -49,9 +51,11 @@ function [data,stateKin] = runSimKinAbs(input)
         stateKin.setMBodyPosQuat('mBodyPosQuat_0',mBodyPosQuat_0,'model',model);
     end
 
+    stats = mp.getPerformance();
+
     %% Saving Workspace
 
-    clear ans k kVec mBodyTwist_0 mBodyPosQuat_0 tout
+    clear ans k kVec mBodyTwist_0 mBodyPosQuat_0 tout mp
 
     if stgs.saving.workspace.run
         if stgs.saving.workspace.clearCasadi

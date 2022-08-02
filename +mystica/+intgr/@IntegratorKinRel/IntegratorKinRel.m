@@ -59,8 +59,7 @@ classdef IntegratorKinRel < mystica.intgr.Integrator
             xf = obj.integrate@mystica.intgr.Integrator('dxdt',dxdt,'xi',obj.mBodyPosQuat_0,'ti',obj.ti,'tf',obj.tf);
             
             if obj.dxdtOpts.assumeConstant == 0
-                % because the stateKinMBody (handle class) is updated
-                % inside the method get_mBodyVelQuat0_from_motorsAngVel
+                % because the stateKinMBody (handle class) is updated inside the method get_mBodyVelQuat0_from_motorsAngVel
                 input.stateKinMBody.setMBodyPosQuat('model',input.model,'mBodyPosQuat_0',obj.mBodyPosQuat_0)
             end
             

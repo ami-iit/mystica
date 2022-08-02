@@ -17,7 +17,7 @@ function mBodyVelQuat_0 = get_mBodyVelQuat0_from_motorsAngVel(obj,input)
     mBodyTwist_0 = obj.nullJc_mBodyTwist_0 * invZact * input.motorsAngVel;
 
     if isnumeric(obj.mBodyPosQuat_0) && isnumeric(mBodyTwist_0) && isnumeric(input.kBaum)
-        mBodyVelQuat_0 = full(mystica_stateKin('get_mBodyVelQuat_from_mBodyTwist',obj.mBodyPosQuat_0,mBodyTwist_0,input.kBaum));
+        mBodyVelQuat_0 = full(mystica_stateKin('get_mBodyVelQuat0_from_mBodyTwist0',obj.mBodyPosQuat_0,mBodyTwist_0,input.kBaum));
     else
         mBodyVelQuat_0 = full(obj.csdFn.get_mBodyVelQuat0_from_mBodyTwist0(obj.mBodyPosQuat_0,mBodyTwist_0,input.kBaum));
     end

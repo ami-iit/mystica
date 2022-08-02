@@ -1,7 +1,8 @@
 function install(input)
     arguments
-        input.mambaforge_prefix char = ''
-        input.env_name          char = 'mystica'
+        input.mambaforge_prefix        char = ''
+        input.env_name                 char = 'mystica'
+        input.install_casadi_via_mamba logical = true
     end
     % function created inspired by https://github.com/robotology/robotology-superbuild/blob/master/scripts/install_robotology_packages.m
 
@@ -10,6 +11,7 @@ function install(input)
     setup_script     = fullfile(mystica_fullpath,'deps','setup.m');
 
     matlab_path_env = '';
+    matlab_folders_to_be_installed = {};
 
     if exist(install_prefix,'dir')
         fprintf('Directory %s already exists.\n', install_prefix);
@@ -31,7 +33,13 @@ function install(input)
 
     % Install all the packages via conda
     fprintf('Installing packages\n');
-    system(sprintf('"%s" create -n "%s" -y -c conda-forge -c robotology casadi-matlab-bindings=3.5.5.2 "libblas=*=*openblas"\n', mamba_full_path,input.env_name));
+    if input.install_casadi_via_mamba
+        system(sprintf('"%s" create -n "%s" -y -c conda-forge -c robotology casadi-matlab-bindings=3.5.5.2 "libblas=*=*openblas"\n', mamba_full_path,input.env_name));
+    else
+        system(sprintf('"%s" create -n "%s" -y -c conda-forge -c robotology \n', mamba_full_path,input.env_name));
+        casadi_full_path = fullfile(install_prefix,'casadi');
+        download_casadi_binaries(casadi_full_path)
+    end
     % see discussion https://github.com/ami-iit/element_morphing-cover-design/issues/215#issuecomment-1081515249 to understand why we added "libblas=*=*openblas"
     fprintf('Installation of packages completed\n');
 
@@ -43,35 +51,32 @@ function install(input)
 
     %% Configure GitHub repositories
 
-    fprintf('Installing GitHub repositories\n');
+    fprintf('Cloning GitHub repositories\n')
     clone_git_repository('https://github.com/ewiger/yamlmatlab.git','deps')
-    matlab_path_env = strcat( fullfile(install_prefix,'yamlmatlab') , env_sep , matlab_path_env );
-    system(sprintf('"%s" env config vars set MATLABPATH="%s" -p "%s"',mamba_full_path,matlab_path_env,env_full_path));
-    fprintf('Installation of GitHub repositories completed\n');
+    fprintf('Cloning GitHub repositories completed\n')
 
-    %% Addpath mystica directory
+    %% Installing matlab directories
 
-    fprintf('Installing mystica root folder\n')
-    matlab_path_env = strcat( mystica_fullpath , env_sep , matlab_path_env );
-    system(sprintf('"%s" env config vars set MATLABPATH="%s" -p "%s"',mamba_full_path,matlab_path_env,env_full_path));
-    fprintf('Installing mystica root folder completed\n')
+    % yamlmatlab
+    matlab_folders_to_be_installed{end+1} = fullfile(install_prefix,'yamlmatlab');
 
-    %% Addpath mystica/meshes directory
+    % mystica root folder
+    matlab_folders_to_be_installed{end+1} = mystica_fullpath;
 
-    fprintf('Installing mystica meshes folder\n')
-    mystica_meshes_fullpath = fullfile(mystica_fullpath,'meshes');
-    matlab_path_env = strcat( mystica_meshes_fullpath , env_sep , matlab_path_env );
-    system(sprintf('"%s" env config vars set MATLABPATH="%s" -p "%s"',mamba_full_path,matlab_path_env,env_full_path));
-    fprintf('Installing mystica meshes folder completed\n')
+    % mystica meshes
+    matlab_folders_to_be_installed{end+1} = fullfile(mystica_fullpath,'meshes');
 
-    %% Create csdMEX folder
+    % csdMEX
+    matlab_folders_to_be_installed{end+1} = fullfile(mystica_fullpath,'deps','csdMEX'); mkdir(matlab_folders_to_be_installed{end})
 
-    fprintf('Installing mystica csdMEX folder\n')
-    mystica_csdMEX_fullpath = fullfile(mystica_fullpath,'deps','csdMEX');
-    mkdir(mystica_csdMEX_fullpath)
-    matlab_path_env = strcat( mystica_csdMEX_fullpath , env_sep , matlab_path_env );
-    system(sprintf('"%s" env config vars set MATLABPATH="%s" -p "%s"',mamba_full_path,matlab_path_env,env_full_path));
-    fprintf('Installing mystica meshes folder completed\n')
+    % casadi binaries
+    if ~input.install_casadi_via_mamba
+        matlab_folders_to_be_installed{end+1} = casadi_full_path;
+    end
+
+    for i = 1 : length(matlab_folders_to_be_installed)
+        matlab_path_env = install_matlab_folder(matlab_folders_to_be_installed{i},matlab_path_env,mamba_full_path,env_full_path);
+    end
 
     %% Creation of setup.m
 
@@ -84,32 +89,23 @@ function install(input)
     fprintf(setupID,'    env_sep = ":";\n');
     fprintf(setupID,'end\n');
     fprintf(setupID,'\n');
-    fprintf(setupID,'%% Install prefix (hardcoded at generation time)\n');
-    fprintf(setupID,'pckgs_install_prefix    = "%s";\n', pckgs_install_prefix);
-    fprintf(setupID,'install_prefix          = "%s";\n', install_prefix);
-    fprintf(setupID,'mystica_fullpath        = "%s";\n', mystica_fullpath);
-    fprintf(setupID,'mystica_meshes_fullpath = "%s";\n', mystica_meshes_fullpath);
-    fprintf(setupID,'mystica_csdMEX_fullpath = "%s";\n', mystica_csdMEX_fullpath);
+    fprintf(setupID,'%% Configure `matlab_folders_to_be_installed` (hardcoded at generation time)\n');
+    for i = 1 : length(matlab_folders_to_be_installed)
+        fprintf(setupID,'matlab_folders_to_be_installed{%i} = "%s";\n',i,matlab_folders_to_be_installed{i});
+    end
+    fprintf(setupID,'%% Configure `pckgs_install_prefix` (hardcoded at generation time)\n');
+    fprintf(setupID,'pckgs_install_prefix = "%s";\n', pckgs_install_prefix);
     fprintf(setupID,'\n');
+    fprintf(setupID,'%% Install `matlab_folders_to_be_installed`\n');
+    for i = 1 : length(matlab_folders_to_be_installed)
+        fprintf(setupID,'addpath(matlab_folders_to_be_installed{%i});\n',i);
+    end
     fprintf(setupID,'%% AddPath packages installed with conda\n');
     fprintf(setupID,'addpath(fullfile(pckgs_install_prefix,"mex"));\n');
-    fprintf(setupID,'\n');
-    fprintf(setupID,'%% AddPath github repositories\n');
-    fprintf(setupID,'addpath(fullfile(install_prefix,"yamlmatlab"));\n');
-    fprintf(setupID,'\n');
-    fprintf(setupID,'%% AddPath mystica\n');
-    fprintf(setupID,'addpath(mystica_fullpath);\n');
-    fprintf(setupID,'\n');
-    fprintf(setupID,'%% AddPath mystica meshes\n');
-    fprintf(setupID,'addpath(mystica_meshes_fullpath);\n');
-    fprintf(setupID,'\n');
-    fprintf(setupID,'%% AddPath mystica csdMEX\n');
-    fprintf(setupID,'addpath(mystica_csdMEX_fullpath);\n');
     fprintf(setupID,'\n');
     fprintf(setupID,'%% Add to the env:"PATH" the directory with the packages installed with conda\n');
     fprintf(setupID,'setenv("PATH",strcat(fullfile(pckgs_install_prefix,"bin"), env_sep, getenv("PATH")));\n');
     fclose( setupID);
-
     fprintf('packages are successfully installed!\n');
     fprintf('Please run %s before using the packages,\n',setup_script)
     fprintf('or activate the conda enviroment %s and open matlab from that terminal.\n',input.env_name);
@@ -130,6 +126,35 @@ function clone_git_repository(repository_url,install_prefix)
     else
         disp('repository exists')
         system(['git -C ',install_prefix,filesep,nameRepo,' pull']);
+    end
+end
+
+function matlab_path_env = install_matlab_folder(name,matlab_path_env,mamba_full_path,env_full_path)
+    if ispc
+        env_sep = ";";
+    else
+        env_sep = ":";
+    end
+    fprintf('Installing %s\n',name)
+    matlab_path_env = strcat( name , env_sep , matlab_path_env );
+    system(sprintf('"%s" env config vars set MATLABPATH="%s" -p "%s"',mamba_full_path,matlab_path_env,env_full_path));
+end
+
+function download_casadi_binaries(casadi_full_path)
+    if ismac
+        websave('casadi','https://github.com/casadi/casadi/releases/download/3.5.5/casadi-osx-matlabR2015a-v3.5.5.tar.gz')
+        untar('casadi.gz',casadi_full_path)
+        delete('casadi.gz')
+    elseif isunix
+        websave('casadi','https://github.com/casadi/casadi/releases/download/3.5.5/casadi-linux-matlabR2014b-v3.5.5.tar.gz')
+        untar('casadi.gz',casadi_full_path)
+        delete('casadi.gz')
+    elseif ispc
+        websave('casadi','https://github.com/casadi/casadi/releases/download/3.5.5/casadi-windows-matlabR2016a-v3.5.5.zip')
+        unzip('casadi.zip',casadi_full_path)
+        delete('casadi.zip')
+    else
+        error('Platform not supported')
     end
 end
 

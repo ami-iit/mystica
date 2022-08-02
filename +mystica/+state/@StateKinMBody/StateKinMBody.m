@@ -37,8 +37,8 @@ classdef StateKinMBody < matlab.mixin.Copyable
                 'decompositionMethod'   ,obj.stgs.nullSpace.decompositionMethod,...
                 'rankRevealingMethod'   ,obj.stgs.nullSpace.rankRevealingMethod,...
                 'toleranceRankRevealing',obj.stgs.nullSpace.toleranceRankRevealing);
-            % generate MEX file containing casadi funtions
-            obj.generateMEX();
+            % generate MEX file containing (kin) casadi funtions
+            obj.generateMEX_kin();
             % Evaluate initial state
             obj.setMBodyPosQuat('mBodyPosQuat_0',input.mBodyPosQuat_0,'model',input.model)
             obj.mBodyPosQuat_0_initial = obj.mBodyPosQuat_0;
@@ -55,6 +55,30 @@ classdef StateKinMBody < matlab.mixin.Copyable
         end
 
         function generateMEX(obj)
+            obj.generateMEX_kin();
+        end
+
+        function tform_b = get_link_tform_b(obj,input)
+            arguments
+                obj
+                input.iLink (1,1) double
+                input.model mystica.model.Model
+                input.mBodyPosQuat_0 = obj.mBodyPosQuat_0
+            end
+            linkPosQuat_0 = input.mBodyPosQuat_0(input.model.linksAttributes{input.iLink}.selector.indexes_linkPosQuat_from_mBodyPosQuat);
+            tform_b = mystica.rbm.getTformGivenPosQuat(linkPosQuat_0);
+        end
+
+        mBodyVelQuat    = get_mBodyVelQuat0_from_mBodyTwist0(obj,input);
+        mBodyVelQuat    = get_mBodyVelQuat0_from_motorsAngVel(obj,input);
+        mBodyTwist      = get_mBodyTwist0_from_motorsAngVel(obj,input)
+        jointsAngVel_PJ = get_jointsAngVelPJ_from_motorsAngVel(obj,input);
+        Zact = getZact(obj,input);
+        setMBodyPosQuat(obj,input)
+    end
+
+    methods (Access=private)
+        function generateMEX_kin(obj)
             nameMEX = 'mystica_stateKin';
             opts = struct('main', true,'mex', true);
             initial_path = pwd;
@@ -81,24 +105,6 @@ classdef StateKinMBody < matlab.mixin.Copyable
             movefile([nameMEX,'.c'],[nameMEX,'_old.c'])
             cd(initial_path)
         end
-
-        function tform_b = get_link_tform_b(obj,input)
-            arguments
-                obj
-                input.iLink (1,1) double
-                input.model mystica.model.Model
-                input.mBodyPosQuat_0 = obj.mBodyPosQuat_0
-            end
-            linkPosQuat_0 = input.mBodyPosQuat_0(input.model.linksAttributes{input.iLink}.selector.indexes_linkPosQuat_from_mBodyPosQuat);
-            tform_b = mystica.rbm.getTformGivenPosQuat(linkPosQuat_0);
-        end
-
-        mBodyVelQuat    = get_mBodyVelQuat0_from_mBodyTwist0(obj,input);
-        mBodyVelQuat    = get_mBodyVelQuat0_from_motorsAngVel(obj,input);
-        mBodyTwist      = get_mBodyTwist0_from_motorsAngVel(obj,input)
-        jointsAngVel_PJ = get_jointsAngVelPJ_from_motorsAngVel(obj,input);
-        Zact = getZact(obj,input);
-        setMBodyPosQuat(obj,input)
     end
 
     methods (Access=protected)

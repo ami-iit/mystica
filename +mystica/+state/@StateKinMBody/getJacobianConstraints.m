@@ -87,6 +87,6 @@ function getJacobianConstraints(obj,model)
     obj.csdSy.intJcV = vertcat(intJcV{:});
     obj.csdFn.intJcV = casadi.Function('intJcV',{obj.csdSy.mBodyPosQuat_0,mBodyPosQuat_0_initial},{obj.csdSy.intJcV});
     
-    model.updateSelectorConstrainedDirections('indexes_ang',find(vertcat(cnstr_ang{:})),'indexes_lin',find(vertcat(cnstr_lin{:})))
+    model.appendSelectorConstrainedDirections('indexes_ang',find(vertcat(cnstr_ang{:})),'indexes_lin',find(vertcat(cnstr_lin{:})))
     
 end

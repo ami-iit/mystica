@@ -1,10 +1,12 @@
-function [data,stateDyn] = runSimDynRel(input)
+function [data,stateDyn,stats] = runSimDynRel(input)
     arguments
         input.stgs                 struct
         input.model                mystica.model.Model
         input.mBodyPosQuat_0 (:,1) double
         input.nameControllerClass  char
     end
+
+    mp = mystica.utils.MeasurePerformance();
 
     stgs            = input.stgs;
     model           = input.model;
@@ -20,7 +22,8 @@ function [data,stateDyn] = runSimDynRel(input)
         'mBodyPosQuat_0',input.mBodyPosQuat_0,...
         'mBodyTwist_0',zeros(model.constants.mBodyTwist,1),...
         'stgsIntegrator',stgs.integrator,...
-        'stgsStateDynMBody',stgs.stateDyn);
+        'stgsStateDynMBody',stgs.stateDyn,...
+        'stgsModel',stgs.model);
 
     contr = ClassController(...
         'model',model,...
@@ -44,21 +47,21 @@ function [data,stateDyn] = runSimDynRel(input)
 
     for k = kVec
         % Controller
-        motorsCurrent = contr.solve('stateDynMBody',stateDyn,'time',tout(k),'model',model);
+        motorsCurrent = contr.solve('stateDynMBody',stateDyn,'time',tout(k),'model',model) * stgs.controller.applyControlInput;
         % Integrator
         mBodyPosVel_0 = intgr.integrate('stateDynMBody',stateDyn,'motorsCurrent',motorsCurrent,'model',model);
-        stateDyn.setMBodyPosQuat('mBodyPosQuat_0',stateDyn.mBodyPosQuat_0,'model',model);
         % Logger
         data.store('indexIteration',k,'time',tout(k),'model',model,'controller',contr,'stateDynMBody',stateDyn,'motorsCurrent',motorsCurrent,...
             'stgsDesiredShape',stgs.desiredShape)
         % New State
         stateDyn.setMBodyPosVel('mBodyPosVel_0',mBodyPosVel_0,'model',model);
-        stateDyn.setMBodyPosQuat('mBodyPosQuat_0',stateDyn.mBodyPosQuat_0,'model',model);
     end
+
+    stats = mp.getPerformance();
 
     %% Saving Workspace
 
-    clear ans k kVec motorsCurrent mBodyPosQuat_0 tout dataLiveStatistics
+    clear ans k kVec motorsCurrent mBodyPosQuat_0 tout mp
 
     if stgs.saving.workspace.run
         if stgs.saving.workspace.clearCasadi

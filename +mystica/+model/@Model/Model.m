@@ -118,14 +118,14 @@ classdef Model < matlab.mixin.Copyable
             obj.configure();
         end
 
-        function updateSelectorConstrainedDirections(obj,input)
+        function appendSelectorConstrainedDirections(obj,input)
             arguments
                 obj
                 input.indexes_ang = []
                 input.indexes_lin = []
             end
-            obj.selector.indexes_constrainedAngVel_from_JcV = [obj.selector.indexes_constrainedAngVel_from_JcV ; input.indexes_ang(:)];
-            obj.selector.indexes_constrainedLinVel_from_JcV = [obj.selector.indexes_constrainedLinVel_from_JcV ; input.indexes_lin(:)];
+            obj.selector.indexes_constrainedAngVel_from_JcV = unique([obj.selector.indexes_constrainedAngVel_from_JcV ; input.indexes_ang(:)]);
+            obj.selector.indexes_constrainedLinVel_from_JcV = unique([obj.selector.indexes_constrainedLinVel_from_JcV ; input.indexes_lin(:)]);
         end
 
         function jointIndex = getJointIndex(obj,parentIndex,childIndex)

@@ -107,6 +107,18 @@ classdef Logger < matlab.mixin.Copyable
             data.intJcV(input.model.selector.indexes_constrainedLinVel_from_JcV,:) = data.intJcV(input.model.selector.indexes_constrainedLinVel_from_JcV,:)./umc.length; %[m/s];
         end
 
+        function data = deleteLoggedIndexes(obj,input)
+            arguments
+                obj
+                input.indexes
+            end
+            names = fieldnames(obj); % extract names of features
+            data = obj.copy();
+            for i = 1:length(names)
+                data.(names{i})(:,input.indexes) = [];
+            end
+        end
+
         dataOut = merge(obj,dataIn,stgs);
 
     end
