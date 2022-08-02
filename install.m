@@ -98,7 +98,7 @@ function install(input)
     fprintf(setupID,'\n');
     fprintf(setupID,'%% Install `matlab_folders_to_be_installed`\n');
     for i = 1 : length(matlab_folders_to_be_installed)
-        fprintf(setupID,'addpath(matlab_folders_to_be_installed{%i});\n',i,matlab_folders_to_be_installed{i});
+        fprintf(setupID,'addpath(matlab_folders_to_be_installed{%i});\n',i);
     end
     fprintf(setupID,'%% AddPath packages installed with conda\n');
     fprintf(setupID,'addpath(fullfile(pckgs_install_prefix,"mex"));\n');
@@ -138,7 +138,6 @@ function matlab_path_env = install_matlab_folder(name,matlab_path_env,mamba_full
     fprintf('Installing %s\n',name)
     matlab_path_env = strcat( name , env_sep , matlab_path_env );
     system(sprintf('"%s" env config vars set MATLABPATH="%s" -p "%s"',mamba_full_path,matlab_path_env,env_full_path));
-    fprintf('Installing %s completed\n',name)
 end
 
 function download_casadi_binary(casadi_full_path)
