@@ -38,7 +38,7 @@ function install(input)
     else
         system(sprintf('"%s" create -n "%s" -y -c conda-forge -c robotology \n', mamba_full_path,input.env_name));
         casadi_full_path = fullfile(install_prefix,'casadi');
-        download_casadi_binary(casadi_full_path)
+        download_casadi_binaries(casadi_full_path)
     end
     % see discussion https://github.com/ami-iit/element_morphing-cover-design/issues/215#issuecomment-1081515249 to understand why we added "libblas=*=*openblas"
     fprintf('Installation of packages completed\n');
@@ -69,7 +69,7 @@ function install(input)
     % csdMEX
     matlab_folders_to_be_installed{end+1} = fullfile(mystica_fullpath,'deps','csdMEX'); mkdir(matlab_folders_to_be_installed{end})
 
-    % casadi binary
+    % casadi binaries
     if ~input.install_casadi_via_mamba
         matlab_folders_to_be_installed{end+1} = casadi_full_path;
     end
@@ -140,7 +140,7 @@ function matlab_path_env = install_matlab_folder(name,matlab_path_env,mamba_full
     system(sprintf('"%s" env config vars set MATLABPATH="%s" -p "%s"',mamba_full_path,matlab_path_env,env_full_path));
 end
 
-function download_casadi_binary(casadi_full_path)
+function download_casadi_binaries(casadi_full_path)
     if ismac
         websave('casadi','https://github.com/casadi/casadi/releases/download/3.5.5/casadi-osx-matlabR2015a-v3.5.5.tar.gz')
         untar('casadi.gz',casadi_full_path)
