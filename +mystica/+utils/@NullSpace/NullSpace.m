@@ -3,7 +3,6 @@ classdef NullSpace < handle
     properties (SetAccess = protected, GetAccess = public)
         A
         Z
-        pinvAred
         rank = []
         singValues
         stgs
@@ -11,6 +10,8 @@ classdef NullSpace < handle
     end
     properties (SetAccess = protected, GetAccess = protected)
         linIndRow
+        pinvAred
+        pinvA
         V
     end
 
@@ -55,6 +56,24 @@ classdef NullSpace < handle
             linIndRow = obj.linIndRow;
         end
 
+        function pinvAred = getPinvAred(obj)
+            switch obj.stgs.decompositionMethod
+                case 'svd'
+                    [Q,R,P] = qr(transpose(obj.A));
+                    obj.pinvAred = obj.computePinvQR(Q,R,P);
+            end
+            pinvAred = obj.pinvAred;
+        end
+
+        function pinvA = getPinvA(obj)
+            switch obj.stgs.decompositionMethod
+                case {'qrFull','qrSparse'}
+                    [U,S,V] = svd(obj.A,0);
+                    obj.pinvA = obj.computePinvSVD(U,S,V);
+            end
+            pinvA = obj.pinvA;
+        end
+
     end
 
     methods (Access=protected)
@@ -69,10 +88,7 @@ classdef NullSpace < handle
             obj.Z = obj.V(:,(obj.rank+1):end);
             obj.linIndRow = sort(p(1:obj.rank));
             %
-            Q1 = Q(:,1:obj.rank);
-            R1 = R(1:obj.rank,1:obj.rank);
-            P1 = P(:,1:obj.rank); P1(sum(P1,2)==0,:)=[];
-            obj.pinvAred = Q1*((R1')\(inv(P1)));
+            obj.pinvAred = obj.computePinvQR(Q,R,P);
         end
 
         function svd(obj)
@@ -81,10 +97,21 @@ classdef NullSpace < handle
             obj.getRank();
             obj.Z = obj.V(:,(obj.rank+1):end);
             %
+            obj.pinvA = obj.computePinvSVD(U,S,obj.V);
+        end
+
+        function pinvAred = computePinvQR(obj,Q,R,P)
+            Q1 = Q(:,1:obj.rank);
+            R1 = R(1:obj.rank,1:obj.rank);
+            P1 = P(:,1:obj.rank); P1(sum(P1,2)==0,:)=[];
+            pinvAred = Q1*((R1')\(inv(P1)));
+        end
+
+        function pinvA = computePinvSVD(obj,U,S,V)
             Ur = U(:,1:obj.rank);
             Sr = S(1:obj.rank,1:obj.rank); invSr = diag(1./diag(Sr));
-            Vr = obj.V(:,1:obj.rank);
-            obj.pinvAred = Vr * invSr * Ur';
+            Vr = V(:,1:obj.rank);
+            pinvA = Vr * invSr * Ur';
         end
 
     end
