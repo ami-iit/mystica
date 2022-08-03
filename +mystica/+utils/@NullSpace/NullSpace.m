@@ -17,7 +17,7 @@ classdef NullSpace < handle
     methods
         function obj = NullSpace(input)
             arguments
-                input.decompositionMethod    char   = 'svd'
+                input.decompositionMethod    char {mustBeMember(input.decompositionMethod,{'svd','qrFull','qrSparse'})} = 'svd'
                 input.rankRevealingMethod    char   = 'limitSingularValue_tolAuto'
                 input.toleranceRankRevealing double = []
                 input.A                      double = []
