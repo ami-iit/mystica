@@ -59,3 +59,21 @@ function quat = getQuatGivenRotm(rotm)
     quat = [qw;qx;qy;qz] / quaternionNorm;
     
 end
+
+%% alternative implementation
+% 
+% function quat = getQuatGivenRotm2(rotm)
+% 
+%     qw = 0.5 * 1                            * sqrt(rotm(1,1) + rotm(2,2) + rotm(3,3) + 1);
+%     qx = 0.5 * sign0(rotm(3,2) - rotm(2,3)) * sqrt(rotm(1,1) - rotm(2,2) - rotm(3,3) + 1);
+%     qy = 0.5 * sign0(rotm(1,3) - rotm(3,1)) * sqrt(rotm(2,2) - rotm(3,3) - rotm(1,1) + 1);
+%     qz = 0.5 * sign0(rotm(2,1) - rotm(1,2)) * sqrt(rotm(3,3) - rotm(1,1) - rotm(2,2) + 1);
+% 
+%     quat = [qw;qx;qy;qz];
+% 
+% end
+% 
+% function s = sign0(x)
+%     s = 2*(x>=0)-1;
+% end
+

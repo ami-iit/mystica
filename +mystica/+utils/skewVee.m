@@ -11,6 +11,6 @@ function x = skewVee(X)
     %       x(3)    0      -x(1);
     %      -x(2)    x(1)    0  ];
 
-    x = [-X_skew(2,3);X_skew(1,3);A-X_skew(1,2)];
+    x = [-X_skew(2,3);X_skew(1,3);-X_skew(1,2)];
 
 end

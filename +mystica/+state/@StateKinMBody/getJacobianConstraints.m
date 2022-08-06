@@ -25,7 +25,7 @@ function getJacobianConstraints(obj,model)
         pos_0_b   = mystica.rbm.getPosGivenPosQuat( linkPosQuat_0);
 
         M = sel_twist_i;
-        N = [pos_0_b-pos_0_bi;mystica.rbm.logQuat(mystica.rbm.multiplyQuat(quat_0_b,quat_bi_0))];
+        N = [pos_0_b-pos_0_bi;mystica.rbm.logQuat(mystica.rbm.multiplyQuat(quat_0_b,quat_bi_0),'fixSign',true)];
 
         Jc{       end+1} = M;
         intJcV{   end+1} = N;
@@ -43,8 +43,6 @@ function getJacobianConstraints(obj,model)
         tform_0_pj = tform_0_p*tform_p_pj;
         tform_0_cj = tform_0_c*tform_c_cj;
 
-        tform_pj0_cj0 = model.joints{i}.tform_pj0_cj0;
-
         quat_0_p = mystica.rbm.getQuatGivenPosQuat(obj.csdSy.mBodyPosQuat_0(model.linksAttributes{index.parent}.selector.indexes_linkPosQuat_from_mBodyPosQuat));
         quat_0_c = mystica.rbm.getQuatGivenPosQuat(obj.csdSy.mBodyPosQuat_0(model.linksAttributes{index.child }.selector.indexes_linkPosQuat_from_mBodyPosQuat));
 
@@ -52,7 +50,7 @@ function getJacobianConstraints(obj,model)
         quat_0_cj    = mystica.rbm.multiplyQuat(quat_0_c,mystica.rbm.getQuatGivenTform(tform_c_cj));
         quat_pj_cj   = mystica.rbm.multiplyQuat(quat_pj_0,quat_0_cj);
 
-        quat_cj0_pj0 = mystica.rbm.invQuat(mystica.rbm.getQuatGivenTform(tform_pj0_cj0));
+        quat_cj0_pj0 = mystica.rbm.invQuat(mystica.rbm.getQuatGivenTform(model.joints{i}.tform_pj0_cj0));
 
         if strcmp(...
                 model.joints{i}.type,'spherical') || ...
@@ -90,7 +88,7 @@ function getJacobianConstraints(obj,model)
             sel_angVel_p = model.linksAttributes{index.parent}.selector.matrix_linkAngVel_from_mBodyTwist;
 
             M = constrainedDirections*rotm_pj_0*(sel_angVel_c - sel_angVel_p);
-            N = constrainedDirections*mystica.rbm.logQuat(mystica.rbm.multiplyQuat(quat_pj_cj,quat_cj0_pj0));
+            N = constrainedDirections*mystica.rbm.logQuat(mystica.rbm.multiplyQuat(quat_pj_cj,quat_cj0_pj0),'fixSign',true);
 
             Jc{       end+1} = M;
             intJcV{   end+1} = N;
