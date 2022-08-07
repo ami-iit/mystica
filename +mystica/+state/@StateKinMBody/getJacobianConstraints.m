@@ -25,7 +25,7 @@ function getJacobianConstraints(obj,model)
         pos_0_b   = mystica.rbm.getPosGivenPosQuat( linkPosQuat_0);
 
         M = sel_twist_i;
-        N = [pos_0_b-pos_0_bi;mystica.rbm.logQuat(mystica.rbm.multiplyQuat(quat_0_b,quat_bi_0),'fixSign',true)];
+        N = [pos_0_b-pos_0_bi;mystica.rbm.logQuat(mystica.rbm.multiplyQuat(quat_0_b,quat_bi_0),'selectQuat','minDistance')];
 
         Jc{       end+1} = M;
         intJcV{   end+1} = N;
@@ -88,7 +88,7 @@ function getJacobianConstraints(obj,model)
             sel_angVel_p = model.linksAttributes{index.parent}.selector.matrix_linkAngVel_from_mBodyTwist;
 
             M = constrainedDirections*rotm_pj_0*(sel_angVel_c - sel_angVel_p);
-            N = constrainedDirections*mystica.rbm.logQuat(mystica.rbm.multiplyQuat(quat_pj_cj,quat_cj0_pj0),'fixSign',true);
+            N = constrainedDirections*mystica.rbm.logQuat(mystica.rbm.multiplyQuat(quat_pj_cj,quat_cj0_pj0),'selectQuat','minDistance');
 
             Jc{       end+1} = M;
             intJcV{   end+1} = N;
