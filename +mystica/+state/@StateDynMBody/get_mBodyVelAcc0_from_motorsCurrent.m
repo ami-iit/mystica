@@ -70,7 +70,8 @@ function [mBodyVelAcc_0,varargout] = get_mBodyVelAcc0_from_motorsCurrent(obj,inp
             end
 
             if 0
-                [mBodyVelAcc_0,jointsWrenchConstr_PJ] = obj.csdFn.mBodyVelAcc_0(obj.mBodyPosVel_0,input.motorsCurrent);
+                mBodyVelAcc_0 = obj.csdFn.mBodyVelAcc_0(obj.mBodyPosVel_0,input.motorsCurrent);
+                mBodyTwAcc_0  = mBodyVelAcc_0(input.model.selector.indexes_mBodyTwist_from_mBodyPosVel);
             else
                 obj.opti.set_value(obj.optiVar.mBodyPosVel,obj.mBodyPosVel_0);
                 obj.opti.set_value(obj.optiVar.motorsCurrent,input.motorsCurrent);
@@ -81,9 +82,12 @@ function [mBodyVelAcc_0,varargout] = get_mBodyVelAcc0_from_motorsCurrent(obj,inp
                 mBodyVelQuat_0   = sparse(mystica_stateKin('get_mBodyVelQuat0_from_mBodyTwist0',obj.mBodyPosQuat_0,mBodyTwist_0,input.kBaum));
 
                 mBodyTwAcc_0          = X(1:input.model.constants.mBodyTwist,1);
-                jointsWrenchConstr_PJ = X(input.model.constants.mBodyTwist+1:end,1);
                 mBodyVelAcc_0 = [mBodyVelQuat_0 ; mBodyTwAcc_0];
             end
+
+            M = sparse(mystica_stateDyn('massMatrix',obj.mBodyPosQuat_0));                             % massMatrix            -> M
+            W = sparse(mystica_stateDyn('mBodyWrenchExt_0',obj.mBodyPosVel_0,input.motorsCurrent));    % mBodyWrenchExt_0      -> W
+            jointsWrenchConstr_PJ = pinv(full(obj.Jc'))*(M*mBodyTwAcc_0-W);
 
             mBodyVelAcc_0         = full(mBodyVelAcc_0);
             jointsWrenchConstr_PJ = full(jointsWrenchConstr_PJ);

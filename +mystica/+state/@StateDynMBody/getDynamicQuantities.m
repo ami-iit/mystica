@@ -176,11 +176,9 @@ function getDynamicQuantities(obj,model,stgsIntegrator,stgsModel)
 
     % Variable definitions
     dV            = k_dV*opti.variable(model.constants.mBodyTwist ,1); % mBodyTwAcc_0 -> dV
-    f             = k_f*opti.variable(model.constants.nConstraints,1);  % jointsWrenchConstr_pj -> f
-    x             = [dV;f];
+    x             = dV;
     mBodyPosVel   = opti.parameter(model.constants.mBodyPosVel ,1);
     motorsCurrent = opti.parameter(model.constants.motorsAngVel,1);
-    e = opti.variable(model.constants.nConstraints,1); % jointsWrenchConstr_pj -> f
     %
     mBodyPosQuat = mBodyPosVel(model.selector.indexes_mBodyPosQuat_from_mBodyPosVel);
     V      = mBodyPosVel(model.selector.indexes_mBodyTwist_from_mBodyPosVel);         % mBodyTwist_0          -> V
@@ -191,25 +189,23 @@ function getDynamicQuantities(obj,model,stgsIntegrator,stgsModel)
     intJcV = obj.csdFn.intJcV(mBodyPosQuat,obj.mBodyPosQuat_0_initial);
     % Cost Function & Constraint
     E = (Jc*dV+dJc*V)+(kpFeedbackJcV*Jc*V)+(kiFeedbackJcV*intJcV);
-    D = M*dV-W-Jc'*f;
-    opti.minimize(5e2*e'*e+dV'*dV);
-    opti.subject_to(D==0);
-    opti.subject_to(E+e==0);
+    %D = M*dV-W-Jc'*f;
+    opti.minimize(0.5*dV'*M*dV-dV'*W);
+    opti.subject_to(E==0);
     optFun = opti.to_function('mBodyVelAcc',{mBodyPosVel,motorsCurrent},{x});
     %
     X                     = optFun(mBodyPosVel,motorsCurrent);
     mBodyVelQuat          = obj.csdFn.get_mBodyVelQuat0_from_mBodyTwist0(mBodyPosQuat,V,stgsIntegrator.dxdtParam.baumgarteIntegralCoefficient);
-    mBodyTwAcc_0          = X(1:model.constants.mBodyTwist,1);
-    jointsWrenchConstr_PJ = X(model.constants.mBodyTwist+1:end,1);
+    mBodyTwAcc_0          = X;
     mBodyVelAcc_0 = [mBodyVelQuat ; mBodyTwAcc_0];
     %
     obj.csdFn.mBodyVelAcc_0 = casadi.Function('mBodyVelAcc_0',...
         {mBodyPosVel,motorsCurrent},...
-        {mBodyVelAcc_0,jointsWrenchConstr_PJ},...
+        {mBodyVelAcc_0},...
         {'mBodyPosVel','motorsCurrent'},...
-        {'mBodyVelAcc_0','jointsWrenchConstr_PJ'});
+        {'mBodyVelAcc_0'});
 
-    % alternative for computing [dV;f]
+    % alternative for computing [dV]
     obj.opti                  = opti;
     obj.optiVar.mBodyPosVel   = mBodyPosVel;
     obj.optiVar.motorsCurrent = motorsCurrent;
