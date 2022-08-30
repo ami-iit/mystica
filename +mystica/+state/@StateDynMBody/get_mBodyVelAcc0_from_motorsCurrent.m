@@ -85,12 +85,15 @@ function [mBodyVelAcc_0,varargout] = get_mBodyVelAcc0_from_motorsCurrent(obj,inp
                 mBodyVelAcc_0 = [mBodyVelQuat_0 ; mBodyTwAcc_0];
             end
 
-            M = sparse(mystica_stateDyn('massMatrix',obj.mBodyPosQuat_0));                             % massMatrix            -> M
-            W = sparse(mystica_stateDyn('mBodyWrenchExt_0',obj.mBodyPosVel_0,input.motorsCurrent));    % mBodyWrenchExt_0      -> W
-            jointsWrenchConstr_PJ = pinv(full(obj.Jc'))*(M*mBodyTwAcc_0-W);
+            mBodyVelAcc_0 = full(mBodyVelAcc_0);
 
-            mBodyVelAcc_0         = full(mBodyVelAcc_0);
-            jointsWrenchConstr_PJ = full(jointsWrenchConstr_PJ);
+            if nargout > 1
+                M = sparse(mystica_stateDyn('massMatrix',obj.mBodyPosQuat_0));                             % massMatrix            -> M
+                W = sparse(mystica_stateDyn('mBodyWrenchExt_0',obj.mBodyPosVel_0,input.motorsCurrent));    % mBodyWrenchExt_0      -> W
+                jointsWrenchConstr_PJ = pinv(full(obj.Jc'))*(M*mBodyTwAcc_0-W);
+                jointsWrenchConstr_PJ = full(jointsWrenchConstr_PJ);
+                mBodyWrenchExt_0 = full(W);
+            end
 
     end
 
