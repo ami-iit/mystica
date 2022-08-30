@@ -147,7 +147,7 @@ function getDynamicQuantities(obj,model,stgsIntegrator,stgsModel)
     switch stgsIntegrator.dxdtOpts.optOpts.name
         case 'qpoases'
             opti = casadi.Opti('conic');
-            p_opts = struct('expand',true,'error_on_fail',false,'printLevel','none');
+            p_opts = struct('expand',true,'error_on_fail',false,'printLevel','none','enableFullLITests',true,'enableCholeskyRefactorisation',1,'numRefinementSteps',3);
             s_opts = struct();
         case 'osqp'
             opti = casadi.Opti('conic');
@@ -176,8 +176,7 @@ function getDynamicQuantities(obj,model,stgsIntegrator,stgsModel)
 
     % Variable definitions
     dV            = k_dV*opti.variable(model.constants.mBodyTwist ,1); % mBodyTwAcc_0 -> dV
-    f             = k_f*opti.variable(model.constants.nConstraints,1);  % jointsWrenchConstr_pj -> f
-    x             = [dV;f];
+    x             = dV;
     mBodyPosVel   = opti.parameter(model.constants.mBodyPosVel ,1);
     motorsCurrent = opti.parameter(model.constants.motorsAngVel,1);
     %
@@ -190,25 +189,23 @@ function getDynamicQuantities(obj,model,stgsIntegrator,stgsModel)
     intJcV = obj.csdFn.intJcV(mBodyPosQuat,obj.mBodyPosQuat_0_initial);
     % Cost Function & Constraint
     E = (Jc*dV+dJc*V)+(kpFeedbackJcV*Jc*V)+(kiFeedbackJcV*intJcV);
-    D = M*dV-W-Jc'*f;
-    opti.minimize(E'*E);
-    opti.subject_to(D==0);
+    %D = M*dV-W-Jc'*f;
+    opti.minimize(0.5*dV'*M*dV-dV'*W);
     opti.subject_to(E==0);
     optFun = opti.to_function('mBodyVelAcc',{mBodyPosVel,motorsCurrent},{x});
     %
     X                     = optFun(mBodyPosVel,motorsCurrent);
     mBodyVelQuat          = obj.csdFn.get_mBodyVelQuat0_from_mBodyTwist0(mBodyPosQuat,V,stgsIntegrator.dxdtParam.baumgarteIntegralCoefficient);
-    mBodyTwAcc_0          = X(1:model.constants.mBodyTwist,1);
-    jointsWrenchConstr_PJ = X(model.constants.mBodyTwist+1:end,1);
+    mBodyTwAcc_0          = X;
     mBodyVelAcc_0 = [mBodyVelQuat ; mBodyTwAcc_0];
     %
     obj.csdFn.mBodyVelAcc_0 = casadi.Function('mBodyVelAcc_0',...
         {mBodyPosVel,motorsCurrent},...
-        {mBodyVelAcc_0,jointsWrenchConstr_PJ},...
+        {mBodyVelAcc_0},...
         {'mBodyPosVel','motorsCurrent'},...
-        {'mBodyVelAcc_0','jointsWrenchConstr_PJ'});
+        {'mBodyVelAcc_0'});
 
-    % alternative for computing [dV;f]
+    % alternative for computing [dV]
     obj.opti                  = opti;
     obj.optiVar.mBodyPosVel   = mBodyPosVel;
     obj.optiVar.motorsCurrent = motorsCurrent;
