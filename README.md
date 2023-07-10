@@ -23,7 +23,7 @@ The _maximal_ representation consists of a set of _non-minimum_ variables 𝐪 c
 ### Table of content
 
 - [:hammer: Dependencies](#hammer-dependencies)
-- [:floppy_disk: Installation](#floppy_disk-installation)
+- [:floppy\_disk: Installation](#floppy_disk-installation)
 - [:rocket: Usage](#rocket-usage)
 - [:gear: Contributing](#gear-contributing)
 
@@ -31,6 +31,7 @@ The _maximal_ representation consists of a set of _non-minimum_ variables 𝐪 c
 ## :hammer: Dependencies
 
 - [`matlab`](https://mathworks.com/)
+- [`matlab Curve Fitting Toolbox`](https://ch.mathworks.com/products/curvefitting.html) for [`smooth`](https://ch.mathworks.com/help/curvefit/smooth.html) function
 - a matlab [supported-compilers](https://mathworks.com/support/requirements/supported-compilers.html) for MEX-file compilation
 
 Other requisites are:

@@ -51,7 +51,7 @@ function stgs = getDefaultSettingsSimKinRel(model,input)
     stgs.integrator.statusTracker.timeTrackerFile.baseName  = ['kinRel_',model.name]; %[char]
     stgs.integrator.statusTracker.limitMaximumTime          = stgs.integrator.limitMaximumTime;
 
-    %% Controller
+    %% Controller [TODO] remove stgs.controller
 
     stgs.controller.applyControlInput = true;
 

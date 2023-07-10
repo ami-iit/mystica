@@ -54,6 +54,7 @@ function stgs = getDefaultSettingsSimDynRel(model,input)
     stgs.integrator.dxdtOpts.invOpts         = '';
     stgs.integrator.dxdtParam.baumgarteIntegralCoefficient = 5e1;
     stgs.integrator.dxdtParam.feedbackJacobianConstraintsV = [0 0]; % [kp ki] -> dJc V + Jc dV = - kp Jc V - ki \int{Jc V dt}
+    stgs.integrator.dxdtParam.regTermDampPInv = 1e-6;
 
     stgs.integrator.statusTracker.workspacePrint.run        = 1;
     stgs.integrator.statusTracker.workspacePrint.frameRate  = 10;
@@ -62,7 +63,7 @@ function stgs = getDefaultSettingsSimDynRel(model,input)
     stgs.integrator.statusTracker.timeTrackerFile.baseName  = ['dynRel_',model.name]; %[char]
     stgs.integrator.statusTracker.limitMaximumTime          = stgs.integrator.limitMaximumTime;
 
-    %% Controller
+    %% Controller [TODO] remove stgs.controller
 
     stgs.controller.applyControlInput = true;
 
@@ -86,6 +87,13 @@ function stgs = getDefaultSettingsSimDynRel(model,input)
 
     stgs.controller.constraints.byPassModelLimits = 0;
 
+    stgs.controller.lowLevel.applyGravityCompensation = 1;
+    stgs.controller.lowLevel.timeStepUpdateGravityCompensation = 0;
+    stgs.controller.lowLevel.gainMotorVelocity = [0.05 0 0];  % (k1*P+k2*I+k3*D)
+    stgs.controller.lowLevel.boundCorrent = inf;
+    stgs.controller.highLevel.maxTimeStep = 0.01;
+    stgs.controller.highLevel.failApplyLastValue = 0;
+
     %% Noise
 
     stgs.noise.inputCompression.bool         = 0;
@@ -93,7 +101,7 @@ function stgs = getDefaultSettingsSimDynRel(model,input)
     stgs.noise.inputCompression.probMaxValue = 0.1;
 
     stgs.noise.errorStateEstimation.bool         = 0;
-    stgs.noise.errorStateEstimation.maxValue     = 1*stgs.controller.constraints.limitMotorVel;
+    stgs.noise.errorStateEstimation.maxValue     = 1;
     stgs.noise.errorStateEstimation.probMaxValue = 0.05;
 
     %% Visualization Settings
@@ -126,7 +134,7 @@ function stgs = getDefaultSettingsSimDynRel(model,input)
     stgs.visualizer.joint.sphere.dimMin         = model.linksAttributes{1}.linkDimension/6;
     stgs.visualizer.joint.sphere.dimMax         = model.linksAttributes{1}.linkDimension;
 
-    stgs.visualizer.desiredShape.fun.show          = 0;
+    stgs.visualizer.desiredShape.fun.show          = 1;
     stgs.visualizer.desiredShape.fun.edgeColor     = [0.5 0.7 0.9];
     stgs.visualizer.desiredShape.fun.faceColor     = [0.5 0.7 0.9];
     stgs.visualizer.desiredShape.fun.edgeAlpha     = 0.5;

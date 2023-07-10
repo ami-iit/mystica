@@ -5,7 +5,11 @@ classdef LoggerDynRel < mystica.log.Logger
     properties
         mBodyTwist_0
         motorsAngVel
+        motorsAngVel_des
         motorsCurrent
+        motorsCurrentNoise
+        motorsCurrent_task
+        motorsCurrent_gravity
         jointsAngVel_PJ
         %mBodyAngVelStar_0
         mBodyWrenchExt_0
@@ -34,7 +38,11 @@ classdef LoggerDynRel < mystica.log.Logger
             obj@mystica.log.Logger('model',input.model,'numberIterations',input.numberIterations)
             obj.mBodyTwist_0      = zeros(input.model.constants.mBodyTwist  ,obj.numberIterations);
             obj.motorsAngVel      = zeros(input.model.constants.motorsAngVel,obj.numberIterations);
+            obj.motorsAngVel_des  = zeros(input.model.constants.motorsAngVel,obj.numberIterations);
             obj.motorsCurrent     = zeros(input.model.constants.motorsAngVel,obj.numberIterations);
+            obj.motorsCurrent_gravity = zeros(input.model.constants.motorsAngVel,obj.numberIterations);
+            obj.motorsCurrent_task    = zeros(input.model.constants.motorsAngVel,obj.numberIterations);           
+            obj.motorsCurrentNoise    = zeros(input.model.constants.motorsAngVel,obj.numberIterations);           
             obj.jointsAngVel_PJ   = zeros(input.model.constants.jointsAngVel,obj.numberIterations);
             %obj.mBodyAngVelStar_0 = zeros(input.model.constants.mBodyAngVel ,obj.numberIterations);
             obj.mBodyWrenchExt_0      = zeros(input.model.constants.mBodyTwist,obj.numberIterations);
@@ -60,6 +68,10 @@ classdef LoggerDynRel < mystica.log.Logger
                 input.controller
                 input.stgsDesiredShape
                 input.motorsCurrent
+                input.motorsCurrentNoise
+                input.motorsCurrent_task
+                input.motorsCurrent_gravity
+                input.motorsAngVel_des
             end
 
             obj.storeStateKinMBody('model',input.model,'controller',input.controller,'indexIteration',input.indexIteration,...
@@ -77,7 +89,12 @@ classdef LoggerDynRel < mystica.log.Logger
 
             obj.mBodyTwist_0(   :,obj.indexIteration) = mBodyTwist;
             obj.motorsAngVel(   :,obj.indexIteration) = jointsAngVel(input.model.selector.indexes_motorsAngVel_from_jointsAngVel);
+            obj.motorsAngVel_des(:,obj.indexIteration) = input.motorsAngVel_des;
             obj.motorsCurrent(  :,obj.indexIteration) = input.motorsCurrent;
+            obj.motorsCurrentNoise(  :,obj.indexIteration) = input.motorsCurrentNoise;
+            obj.motorsCurrent_task(  :,obj.indexIteration) = input.motorsCurrent_task;
+            obj.motorsCurrent_gravity(  :,obj.indexIteration) = input.motorsCurrent_gravity;
+
             obj.jointsAngVel_PJ(:,obj.indexIteration) = jointsAngVel;
 
             % massMatrix mBodyTwAcc_0 = mBodyWrenchExt + mBodyWrenchJcF_0
