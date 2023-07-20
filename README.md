@@ -26,6 +26,8 @@ The _maximal_ representation consists of a set of _non-minimum_ variables 𝐪 c
 - [:floppy\_disk: Installation](#floppy_disk-installation)
 - [:rocket: Usage](#rocket-usage)
 - [:gear: Contributing](#gear-contributing)
+- [Citing this work](#citing-this-work)
+- [Maintainer](#maintainer)
 
 
 ## :hammer: Dependencies
@@ -95,4 +97,33 @@ If you want to delve deeper into the code, we have prepared [this document](docs
 
 ## :gear: Contributing
 
-**mystica** is an open-source project and is built with your contributions. We strongly encourage you to open an issue with your feature request. Once the issue has been opened, you can also proceed with a pull request. :rocket:
+**mystica** is an open-source project, and is thus built with your contributions. We strongly encourage you to open an issue with your feature request. Once the issue has been opened, you can also proceed with a pull-request. :rocket:
+
+## Citing this work
+
+If you find the work useful, please consider citing:
+
+```bibtex
+@ARTICLE{9793615,
+  author={Bergonti, Fabio and Nava, Gabriele and Fiorio, Luca and L’Erario, Giuseppe and Pucci, Daniele},
+  journal={IEEE Transactions on Robotics},
+  title={Modeling and Control of Morphing Covers for the Adaptive Morphology of Humanoid Robots},
+  year={2022},
+  volume={38},
+  number={5},
+  pages={3300-3313},
+  doi={10.1109/TRO.2022.3170281}}
+```
+
+## Maintainer
+
+This repository is maintained by:
+
+| | |
+|:---:|:---:|
+| [<img src="https://github.com/FabioBergonti.png" width="40">](https://github.com/FabioBergonti) | [@FabioBergonti](https://github.com/FabioBergonti) |
+
+<p align="left">
+   <a href="https://github.com/ami-iit/paper_bergonti_2022_tro_kinematics-control-morphingcovers/blob/master/LICENSE"><img src="https://img.shields.io/github/license/ami-iit/paper_bergonti_2022_tro_kinematics-control-morphingcovers" alt="Size" class="center"/></a>
+  <a href="https://github.com/ami-iit/paper_bergonti_2022_tro_kinematics-control-morphingcovers/actions/workflows/matlab_ci.yml"><img src="https://github.com/ami-iit/paper_bergonti_2022_tro_kinematics-control-morphingcovers/actions/workflows/matlab_ci.yml/badge.svg?branch=main" alt="CI"/></a>
+</p>
