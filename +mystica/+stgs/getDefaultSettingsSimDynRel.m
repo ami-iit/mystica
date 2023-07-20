@@ -63,36 +63,16 @@ function stgs = getDefaultSettingsSimDynRel(model,input)
     stgs.integrator.statusTracker.timeTrackerFile.baseName  = ['dynRel_',model.name]; %[char]
     stgs.integrator.statusTracker.limitMaximumTime          = stgs.integrator.limitMaximumTime;
 
-    %% Controller [TODO] remove stgs.controller
+    %% Controller
 
     stgs.controller.applyControlInput = true;
-
     stgs.controller.casadi.optimizationType = 'conic';
     stgs.controller.casadi.solver           = 'osqp';
-
-    stgs.controller.regTermDampPInv = 1e-6;
-
     stgs.controller.costFunction.weightTaskOrientation  = 1;
     stgs.controller.costFunction.weightTaskMinVariation = 0;
-    stgs.controller.costFunction.weightTaskMinOptiVar   = 0;
-
     stgs.controller.costFunction.gainLinkAngVelStarAligned        = 30;
     stgs.controller.costFunction.gainLinkAngVelStarOpposite       = 100;
     stgs.controller.costFunction.useFeedForwardTermLinkAngVelStar = 1;
-
-    stgs.controller.constraints.eq2inep            = 0;
-    stgs.controller.constraints.limitPassiveAngVel = 5*pi/180; % "controller" limit (there is also the model limit)
-    stgs.controller.constraints.limitMotorVel      = 5*pi/180; % "controller" limit (there is also the model limit)
-    stgs.controller.constraints.limitRoM           = 50*pi/180; % "controller" limit (there is also the model limit)
-
-    stgs.controller.constraints.byPassModelLimits = 0;
-
-    stgs.controller.lowLevel.applyGravityCompensation = 1;
-    stgs.controller.lowLevel.timeStepUpdateGravityCompensation = 0;
-    stgs.controller.lowLevel.gainMotorVelocity = [0.05 0 0];  % (k1*P+k2*I+k3*D)
-    stgs.controller.lowLevel.boundCorrent = inf;
-    stgs.controller.highLevel.maxTimeStep = 0.01;
-    stgs.controller.highLevel.failApplyLastValue = 0;
 
     %% Noise
 

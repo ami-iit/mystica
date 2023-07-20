@@ -50,21 +50,17 @@ function stgs = getDefaultSettingsSimKinAbs(model,input)
     stgs.integrator.statusTracker.timeTrackerFile.baseName  = ['kinAbs_',model.name]; %[char]
     stgs.integrator.statusTracker.limitMaximumTime          = stgs.integrator.limitMaximumTime;
 
-    %% Controller [TODO] remove stgs.controller
+    %% Controller
 
     stgs.controller.applyControlInput = true;
-
     stgs.controller.casadi.optimizationType = 'conic';
     stgs.controller.casadi.solver           = 'osqp';
-
     stgs.controller.costFunction.weightTaskOrientation  = 1;
     stgs.controller.costFunction.weightTaskMinVariation = 0;
-
     stgs.controller.costFunction.gainLinkAngVelStarAligned        = 30;
     stgs.controller.costFunction.gainLinkAngVelStarOpposite       = 100;
     stgs.controller.costFunction.useFeedForwardTermLinkAngVelStar = 1;
 
-    stgs.controller.constraints.eq2inep   = 0;
 
     %% Visualization Settings
 
