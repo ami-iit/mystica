@@ -7,6 +7,10 @@ classdef Integrator < handle
         xf
         dxdt
     end
+    properties (SetAccess=protected,GetAccess=protected)
+        x
+        t
+    end
     properties (SetAccess=immutable,GetAccess=public)
         solverOpts
         dxdtOpts
@@ -34,6 +38,8 @@ classdef Integrator < handle
             end
             obj.configureIntegrator(input);
             obj.xf = obj.xi;
+            obj.x = [];
+            obj.t = [];
         end
         
         function xf = integrate(obj,input)
@@ -55,15 +61,17 @@ classdef Integrator < handle
                     I = casadi.integrator('I',obj.solverOpts.name,odeCsd,optsCsd);
                     r           = I('x0',obj.xi);
                     obj.xf      = full(r.xf);
+                    obj.t = [obj.ti obj.tf];
+                    obj.x = [obj.xi obj.xf];
                 case 'function_handle'
                     opts = odeset;
-                    list = {'AbsTol','RelTol'};
+                    list = {'AbsTol','RelTol','MaxStep'};
                     for i = 1 : length(list)
                         opts.(list{i}) = obj.getfield(obj.solverOpts,list{i});
                     end
                     ode    = str2func(obj.solverOpts.name);
-                    [~,x]  = ode(obj.dxdt,[obj.ti obj.tf],obj.xi,opts);
-                    obj.xf = transpose(x(end,:));
+                    [obj.t,obj.x]  = ode(obj.dxdt,[obj.ti obj.tf],obj.xi,opts);
+                    obj.xf = transpose(obj.x(end,:));
                 otherwise
                     error('class(dxdt) not valid')
             end
@@ -72,7 +80,26 @@ classdef Integrator < handle
             obj.createTimeTrackerFile()
         end
         
-        
+        function dxdt = get_dxdt(obj)
+            arguments
+                obj
+            end
+            if isempty(obj.x)
+                dxdt = 0;
+            elseif size(obj.x)==2
+                dxdt = (obj.xf-obj.xi)/(obj.tf-obj.ti);
+            else
+                t = linspace(obj.t(1),obj.t(end),1e2);
+                X = interp1(obj.t,obj.x,t);
+                dt = t(2)-t(1);
+                dxdt = zeros(size(X,1)-1,size(X,2));
+                for i = 1 : size(dxdt,2)
+                    dxdt(:,i) = smooth(diff(X(:,i))/dt,'sgolay',4);
+                end
+            end
+            dxdt = dxdt(end,:)';
+        end
+
     end
     
     methods (Access = protected)
@@ -87,7 +114,7 @@ classdef Integrator < handle
             if isempty(obj.statusTracker) == 0
                 if obj.ratioTimePrintMax < floor(obj.tf*obj.statusTracker.workspacePrint.frameRate) && obj.statusTracker.workspacePrint.run
                     obj.ratioTimePrintMax = floor(obj.tf*obj.statusTracker.workspacePrint.frameRate);
-                    fprintf('Integration Time: %.1f/%.0f\n',obj.tf,obj.statusTracker.limitMaximumTime);
+                    fprintf('Integration Time: %.2f/%.0f\n',obj.tf,obj.statusTracker.limitMaximumTime);
                 end
             end
         end

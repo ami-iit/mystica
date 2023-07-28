@@ -35,11 +35,12 @@ function stgs = getDefaultSettingsSimKinRel(model,input)
     stgs.integrator.maxTimeStep       = 1e-2;
     stgs.integrator.limitMaximumTime  = input.stgs_integrator_limitMaximumTime;
 
-    stgs.integrator.solverOpts.name   = 'ode45';
-    stgs.integrator.solverOpts.RelTol = 1e-3;
-    stgs.integrator.solverOpts.AbsTol = 1e-6;
+    stgs.integrator.solverOpts.name    = 'ode45';
+    stgs.integrator.solverOpts.RelTol  = 1e-3;
+    stgs.integrator.solverOpts.AbsTol  = 1e-6;
+    stgs.integrator.solverOpts.MaxStep = [];
 
-    stgs.integrator.dxdtOpts.assumeConstant = 1;
+    stgs.integrator.dxdtOpts.assumeConstant = 0;
     stgs.integrator.dxdtParam.baumgarteIntegralCoefficient = 5e1;
     stgs.integrator.dxdtParam.regTermDampPInv = 1e-6;
 
@@ -52,25 +53,14 @@ function stgs = getDefaultSettingsSimKinRel(model,input)
 
     %% Controller
 
+    stgs.controller.applyControlInput = true;
     stgs.controller.casadi.optimizationType = 'conic';
     stgs.controller.casadi.solver           = 'osqp';
-
-    stgs.controller.regTermDampPInv = 1e-6;
-
     stgs.controller.costFunction.weightTaskOrientation  = 1;
     stgs.controller.costFunction.weightTaskMinVariation = 0;
-    stgs.controller.costFunction.weightTaskMinOptiVar   = 0;
-
     stgs.controller.costFunction.gainLinkAngVelStarAligned        = 30;
     stgs.controller.costFunction.gainLinkAngVelStarOpposite       = 100;
     stgs.controller.costFunction.useFeedForwardTermLinkAngVelStar = 1;
-
-    stgs.controller.constraints.eq2inep            = 0;
-    stgs.controller.constraints.limitPassiveAngVel = 5*pi/180; % "controller" limit (there is also the model limit)
-    stgs.controller.constraints.limitMotorVel      = 5*pi/180; % "controller" limit (there is also the model limit)
-    stgs.controller.constraints.limitRoM           = 50*pi/180; % "controller" limit (there is also the model limit)
-
-    stgs.controller.constraints.byPassModelLimits = 0;
 
     %% Noise
 
@@ -79,7 +69,7 @@ function stgs = getDefaultSettingsSimKinRel(model,input)
     stgs.noise.inputCompression.probMaxValue = 0.1;
 
     stgs.noise.errorStateEstimation.bool         = 0;
-    stgs.noise.errorStateEstimation.maxValue     = 1*stgs.controller.constraints.limitMotorVel;
+    stgs.noise.errorStateEstimation.maxValue     = 0.1;
     stgs.noise.errorStateEstimation.probMaxValue = 0.05;
 
     %% Visualization Settings
